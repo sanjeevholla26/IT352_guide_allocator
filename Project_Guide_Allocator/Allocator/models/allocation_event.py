@@ -6,7 +6,7 @@ from .faculty import Faculty
 from Allocator.manager.allocation_event_manager import AllocationEventManager
 from .student import Student
 
-class EventStatus(Enum):
+class event_status(Enum):
     OPEN = 'open'
     LOCKED = 'locked'
     CLOSED = 'closed'
@@ -15,9 +15,19 @@ class EventStatus(Enum):
     def choices(cls):
         return [(key.value, key.name.capitalize()) for key in cls]
 
+class project_type(Enum):
+    BTECH = 'B.Tech'
+    MTECHMAJ = 'M.Tech Major'
+    MTECHMIN = 'M.Tech Minor'
+
+    @classmethod
+    def choices(cls):
+        return [(key.value, key.name.capitalize()) for key in cls]
+    
 class AllocationEvent(models.Model):
     event_name = models.CharField(max_length=255)
-    status = models.CharField(max_length=6, choices=EventStatus.choices(), default='open')
+    status = models.CharField(max_length=6, choices=event_status.choices(), default='open')
+    project_type = models.CharField(max_length=14, choices=project_type.choices(), default='B.Tech')
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
