@@ -1,0 +1,195 @@
+{% extends './login_layout.html' %}
+{% load static %}
+{% load faculty_filters %}
+{% block head %}
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% endblock %}
+{% block title %}
+Event Control
+{% endblock %}
+
+{% block body %}
+<div class="reg-userform">
+    <h1>Run allocation:</h1>
+    {% if event.cluster_count == 0 %}
+    <form action="{% url 'create_cluster' id=event.id %}" method="post" class="reg-userform-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Create Cluster</button>
+    </form>
+    {% else %}
+    <form action="{% url 'run_allocation' id=event.id %}" method="post" class="reg-userform-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Run Allocation</button>
+    </form>
+    <form action="{% url 'generate_student_pdf' id=event.id %}" method="post" class="reg-userform-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Send reports to students</button>
+    </form>
+    <form action="{% url 'generate_faculty_pdf' id=event.id %}" method="post" class="reg-userform-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Send reports to faculty</button>
+    </form>
+    <form action="{% url 'generate_admin_pdf' id=event.id %}" method="post" class="reg-userform-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Send reports to admin</button>
+    </form>
+    <form action="{% url 'reset_allocation' id=event.id %}" method="post" class="reg-userform-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Reset Allocation</button>
+    </form>
+
+    <h2>Cluster Assignment Summary</h2>
+    {% for cluster_number, choices in clusters.items %}
+    <h3>Cluster {{ cluster_number }} ({{ choices|length }} students)</h3>
+    <table border="1" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>CGPA</th>
+                <th>Allotted Professor</th>
+                <th>Processed Choice(s)</th>
+                <th>Current Choice</th>
+                <th>Next Choice(s)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for choice in choices %}
+            <tr>
+                <td>{{ choice.student.user.username }}</td>
+                <td>{{ choice.student.cgpa }}</td>
+                {% if choice.allottedProf %}
+                    <td class="bg-success">{{ choice.allottedProf }}</td>
+                {% else %}
+                    <td>{{ choice.allottedProf }}</td>
+                {% endif %}
+                <td>{{ choice.previousChoices }}</td>
+                {% if choice.currentChoice %}
+                    <td class="bg-warning">{{ choice.currentChoice }}</td>
+                {% else %}
+                    <td>{{ choice.currentChoice }}</td>
+                {% endif %}
+                <td>{{ choice.nextChoices }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+    {% endif %}
+
+    {% if backlog_alloted %}
+    <h2>Allocated Backlog Students</h2>
+    <table border="1" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>CGPA</th>
+                <th>Allocated Professor</th>
+                <th>Current Choice</th>
+                <th>Next Choice(s)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for choice in backlog_alloted %}
+            <tr>
+                <td>{{ choice.student.user.username }}</td>
+                <td>{{ choice.student.cgpa }}</td>
+                {% if choice.current_allocation.abbreviation %}
+                    <td class="bg-success">{{ choice.current_allocation.abbreviation }}</td> 
+                {% else %}
+                    <td>{{ choice.current_allocation.abbreviation }}</td>
+                {% endif %}
+                <td class="bg-warning">{{ choice.preference_list.0.facultyID|get_faculty_abbreviation }}</td>
+                <td>
+                    {% for preference in choice.preference_list %}
+                        {% if preference.facultyID|get_faculty_abbreviation != choice.preference_list.0.facultyID|get_faculty_abbreviation %}
+                            {{ preference.facultyID|get_faculty_abbreviation }}{% if not forloop.last %}, {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </td>               
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+
+    <!-- Backlog Students Section -->
+    {% if backlog %}
+    <h2>Backlog Students Allocation</h2>
+    <form action="{% url 'allot_backlog' id=id %}" method="post">
+        {% csrf_token %}
+        <table border="1" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>CGPA</th>
+                    <th>Preference Choices</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for choice in backlog %}
+                <tr>
+                    <td>{{ choice.student.user.username }}</td>
+                    <td>{{ choice.student.cgpa }}</td>
+                    <td>
+                        <!-- Hidden input to store the student ID -->
+                        <input type="hidden" name="student_{{ choice.id }}" value="{{ choice.student.user.id }}">
+                        {% for preference in choice.preference_list %}
+                        <div>
+                            <input type="radio" name="faculty_{{ choice.id }}" value="{{ preference.facultyID }}" id="pref_{{ choice.id }}_{{ forloop.counter }}">
+                            <label for="pref_{{ choice.id }}_{{ forloop.counter }}">
+                                {{ preference.choiceNo }}: {{ preference.facultyID|get_faculty_abbreviation }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Allot</button>
+    </form>
+    {% endif %}
+</div>
+
+
+<style>
+    form{
+        margin-bottom: 10px;
+    }
+.reg-userform {
+    background: white;
+    padding: 3%;
+    max-width: 1100px;
+    margin: auto;
+    border-radius: 0;
+    filter: none;
+}
+
+.reg-userform>h1 {
+    font-weight: bolder;
+    letter-spacing: 1.5px;
+    border-bottom: solid;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.reg-userform>h5 {
+    font-weight: bolder;
+    margin-left: 2%;
+}
+
+.reg-userform-form {
+    max-width: 600px;
+    margin-left: 2%;
+    margin-top: 2rem;
+}
+
+p {
+    margin-left: 3%;
+    margin-top: 1rem;
+}
+</style>
+{% endblock %}

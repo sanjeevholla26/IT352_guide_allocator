@@ -1,0 +1,72 @@
+{% extends './login_layout.html' %}
+{% load static %}
+{% block head %}
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{%endblock%}
+{%block title%} All Events {%endblock%}
+
+{% block body %}
+    <div class="reg-userform">
+        <h1>Major project allocation dashboard</h1>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Event Name</th>
+                <th scope="col">Start date</th>
+                <th scope="col">End date</th>
+                <th scope="col">Fill form</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for event in eligible_events %}
+                <tr>
+                    <th scope="row" style="width: 3rem;">{{forloop.counter}}</th>
+                    <td style="font-weight: bolder; letter-spacing: 1.5px;"><strong>{{event.event_name}}</strong></td>
+                    <td>{{event.start_datetime}}</td>
+                    <td>{{event.end_datetime}}</td>
+                    <td><a href="{% url 'event_results' id=event.id %}"><button class="btn btn-success">View
+                    </button></a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <style>
+        .reg-userform {
+            background: white;
+            padding: 3%;
+            max-width: 1100px;
+            margin: auto;
+            border-radius: 0;
+            filter: none;
+        }
+
+        .reg-userform>h1 {
+            font-weight: bolder;
+            letter-spacing: 1.5px;
+            border-bottom: solid;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .reg-userform>h5 {
+            font-weight: bolder;
+            margin-left: 2%;
+        }
+
+        .reg-userform-form {
+            max-width: 600px;
+            margin-left: 2%;
+            margin-top: 2rem;
+        }
+
+        p {
+            margin-left: 3%;
+            margin-top: 1rem;
+        }
+    </style>
+    {% endblock %}
+

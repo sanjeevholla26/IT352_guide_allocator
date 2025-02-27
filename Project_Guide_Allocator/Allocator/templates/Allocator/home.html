@@ -1,0 +1,54 @@
+{% extends './login_layout.html' %}
+{% load static %}
+{% block head %}
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{%endblock%}
+{%block title%} Home {%endblock%}
+
+{% block body %}
+    <div class="glass reg-userform">
+        <h1>IT Dept BTech Major Project Guide Allocator</h1>
+        {% if request.user.first_name %}
+        <p>Hello {{request.user.first_name}},</p>
+        {% endif %}
+        <p>NITK Mail ID : {{request.user.edu_email}}</p>
+        <p>Username : {{request.user.username}}</p>
+    </div>
+    <style>
+        .reg-userform {
+            /* background: white; */
+            padding: 3%;
+            max-width: 1100px;
+            margin: auto;
+            border-radius: 1;
+            filter: none;
+        }
+
+        .reg-userform>h1 {
+            font-weight: bolder;
+            letter-spacing: 1.5px;
+            border-bottom: solid;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .reg-userform>h5 {
+            font-weight: bolder;
+            margin-left: 2%;
+        }
+
+        .reg-userform-form {
+            max-width: 600px;
+            margin-left: 2%;
+            margin-top: 2rem;
+        }
+
+        p {
+            margin-left: 3%;
+            margin-top: 1rem;
+        }
+    </style>
+    {% endblock %}
+

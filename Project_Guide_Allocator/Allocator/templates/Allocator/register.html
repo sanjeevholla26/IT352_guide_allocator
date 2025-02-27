@@ -1,0 +1,87 @@
+{% extends './login_layout.html' %}
+{% load static %}
+{% block head %}
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{%endblock%}
+{%block title%} Registration {%endblock%}
+
+{% block body %}
+<div class="reg-container">
+{% if message is not none %}
+    <div class="alert alert-danger" role="alert">
+        {{message}}
+    </div>
+{%endif %}
+
+<div class="reg-userform">
+    {% if message %}
+    <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+    <h1>IT BTech Major Project Guide Allocator</h1>
+    <h5>Add user here</h5>
+    <form action="{% url 'register' %}" method="post" class="reg-userform-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="exampleInputEmail1">NITK EDU mail-ID</label>
+            <input type="email" class="form-control" id="eduEmail0" aria-describedby="emailHelp" placeholder="Enter your NITK MailID" name="nitkMailID" autocomplete="off" required>
+            <small id="nitkMailID" class="form-text text-muted">Enter your NITK mail ID.</small>
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" autocomplete="off">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+            <label for="username">Roll No/ Employee ID</label>
+            <input type="text" class="form-control" id="username1" aria-describedby="emailHelp" placeholder="Enter ID"
+                name="username" autocomplete="off" required>
+        </div>
+        <!-- <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password" autocomplete="off" required>
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Confirm Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="confirm password" name="confirm_password" required>
+        </div> -->
+
+        <button type="submit" class="btn btn-primary">Add User</button>
+    </form>
+</div>
+</div>
+
+<style>
+    .reg-userform{
+        background: white;
+        padding: 3%;
+        max-width: 1100px;
+        margin: auto;
+        border-radius: 0;
+        filter: none;
+    }
+    .reg-userform>h1{
+        font-weight: bolder;
+        letter-spacing: 1.5px;
+        border-bottom: solid;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .reg-userform>h5{
+        font-weight: bolder;
+        margin-left: 2%;
+    }
+    .reg-userform-form{
+        max-width: 600px;
+        margin-left: 2%;
+        margin-top: 2rem;
+    }
+    p{
+        margin-left: 3%;
+        margin-top: 1rem;
+    }
+</style>
+
+{% endblock %}

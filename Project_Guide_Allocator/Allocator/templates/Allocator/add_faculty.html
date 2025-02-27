@@ -1,0 +1,146 @@
+{% extends './login_layout.html' %} {% load static %} {% block head %}
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{%endblock%} {%block title%} Add Faculty {%endblock%} {% block body %}
+<div class="reg-container">
+  <div class="glass reg-userform">
+    <h1>IT BTech Major Project Guide Allocator</h1>
+    <h5>Add Faculty Here</h5>
+    <form
+      action="{% url 'add_faculty' %}"
+      method="post"
+      class="reg-userform-form"
+    >
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="exampleInputEmail1">NITK EDU mail-ID</label>
+        <input
+          type="email"
+          class="form-control"
+          id="edu_mail"
+          aria-describedby="emailHelp"
+          placeholder="Enter the faculty's NITK MailID"
+          name="edu_mail"
+          autocomplete="off"
+          required
+        />
+        <small id="nitkMailID" class="form-text text-muted"
+          >Enter the faculty's NITK mail ID.</small
+        >
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input
+          type="email"
+          class="form-control"
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Enter email"
+          name="email"
+          autocomplete="off"
+        />
+      </div>
+      <div class="form-group">
+        <label for="username">First Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fname"
+          aria-describedby="emailHelp"
+          placeholder="Enter faculty's First Name"
+          name="fname"
+          autocomplete="off"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="username">Last Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="lname"
+          aria-describedby="emailHelp"
+          placeholder="Enter faculty's Last Name"
+          name="lname"
+          autocomplete="off"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="username">Roll No/ Employee ID</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          aria-describedby="emailHelp"
+          placeholder="Enter Employee ID"
+          name="username"
+          autocomplete="off"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="mobile_number">Mobile Number</label>
+        <input
+          type="text"
+          class="form-control"
+          id="mobile_number"
+          placeholder="Enter mobile number"
+          name="mobile_number"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="abbreviation">Abbreviation</label>
+        <input
+          type="text"
+          class="form-control"
+          id="abbreviation"
+          placeholder="Faculty's Abbreviation"
+          name="abbreviation"
+          autocomplete="off"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Add Faculty</button>
+    </form>
+  </div>
+</div>
+
+<style>
+  .reg-userform {
+    /* background: white; */
+    padding: 3%;
+    max-width: 1100px;
+    margin: auto;
+    border-radius: 1;
+    filter: none;
+  }
+
+  .reg-userform > h1 {
+    font-weight: bolder;
+    letter-spacing: 1.5px;
+    border-bottom: solid;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .reg-userform > h5 {
+    font-weight: bolder;
+    margin-left: 2%;
+  }
+
+  .reg-userform-form {
+    max-width: 600px;
+    margin-left: 2%;
+    margin-top: 2rem;
+  }
+
+  p {
+    margin-left: 3%;
+    margin-top: 1rem;
+  }
+</style>
+
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends './login_layout.html' %}
+{% load static %}
+{% block head %}
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{%endblock%}
+
+{%block title%} Add Student {%endblock%}
+
+{% block body %}
+<div class="reg-container">
+    <div class="reg-userform glass">
+        <h1>IT BTech Major Project Guide Allocator</h1>
+        <h5>Add Student Here</h5>
+        <form action="{% url 'add_student' %}" method="post" class="reg-userform-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="exampleInputEmail1">NITK EDU mail-ID</label>
+                <input type="email" class="form-control" id="edu_mail" aria-describedby="emailHelp"
+                    placeholder="Enter the student's NITK MailID" name="edu_mail" autocomplete="off" required>
+                <small id="nitkMailID" class="form-text text-muted">Enter the student's NITK mail ID.</small>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                    placeholder="Enter email" name="email" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="username">First Name</label>
+                <input type="text" class="form-control" id="fname" aria-describedby="emailHelp"
+                    placeholder="Enter student's First Name" name="fname" autocomplete="off" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Last Name</label>
+                <input type="text" class="form-control" id="lname" aria-describedby="emailHelp"
+                    placeholder="Enter student's Last Name" name="lname" autocomplete="off" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Roll No</label>
+                <input type="text" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter student's Roll Number"
+                    name="username" autocomplete="off" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile_number">Mobile Number</label>
+                <input type="text" class="form-control" id="mobile_number" placeholder="Enter mobile number" name="mobile_number" required>
+            </div>            
+            <div class="form-group">
+                <label for="CGPA">CGPA</label>
+                <input type="text" class="form-control" id="CGPA" placeholder="CGPA" name="cgpa" autocomplete="off"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="branch">Branch</label>
+                <input type="text" class="form-control" id="branch" placeholder="Branch" name="branch" required>
+            </div>
+            <div class="form-group">
+                <label for="aca_year">Academic Year</label>
+                <input type="text" class="form-control" id="aca_year" placeholder="Academic Year" name="aca_year"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="has_backlog">Has Backlog</label>
+                <select class="form-control" id="has_backlog" name="has_backlog">
+                    <option value="false" selected>No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Add Student</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .reg-userform {
+        /* background: white; */
+        padding: 3%;
+        max-width: 1100px;
+        margin: auto;
+        border-radius: 1;
+        filter: none;
+    }
+
+    .reg-userform>h1 {
+        font-weight: bolder;
+        letter-spacing: 1.5px;
+        border-bottom: solid;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .reg-userform>h5 {
+        font-weight: bolder;
+        margin-left: 2%;
+    }
+
+    .reg-userform-form {
+        max-width: 600px;
+        margin-left: 2%;
+        margin-top: 2rem;
+    }
+
+    p {
+        margin-left: 3%;
+        margin-top: 1rem;
+    }
+</style>
+
+{% endblock %}
