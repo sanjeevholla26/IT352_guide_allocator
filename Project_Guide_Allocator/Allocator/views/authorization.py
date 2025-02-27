@@ -58,9 +58,9 @@ def send_to_otp(request, user, next_url):
     if user.first_name:
         recv_name = user.first_name
     if not SWIFT_OTP:
-        send_mail_page(user.edu_email, 'Login OTP', f"Dear {user.first_name},\nYour Login OTP(One Time Password) is {user.otp}. Kindly use this OTP to login.\nThank you.\nB.Tech Major Project Team.")
-        if user.mobile_number:
-            send_sms(user.mobile_number, user.otp, recv_name)
+        send_mail_page(user.edu_email, 'Login OTP', f"Dear {recv_name},\nYour Login OTP(One Time Password) is {user.otp}. Kindly use this OTP to login.\nThank you.\nB.Tech Major Project Team.")
+        # if user.mobile_number:
+        #     send_sms(user.mobile_number, user.otp, recv_name)
     return render(request, "Allocator/login_otp.html", {
             "message": "OTP has been sent to your email. Please enter it below.",
             "next": next_url,
