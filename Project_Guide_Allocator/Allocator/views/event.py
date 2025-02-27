@@ -6,7 +6,7 @@ from ..models import AllocationEvent, Faculty,Student
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
-
+from datetime import datetime
 
 import logging
 
@@ -18,12 +18,19 @@ def add_event(request):
     if request.method == "POST":
         user = request.user
         name = request.POST.get("name")
-        start_datetime = request.POST.get("start_datetime")
-        end_datetime = request.POST.get("end_datetime")
+        start_datetime_str = request.POST.get("start_datetime")
+        if start_datetime_str:
+            naive_start_datetime = datetime.strptime(start_datetime_str, "%Y-%m-%dT%H:%M")  # Parse naive datetime
+            start_datetime = timezone.make_aware(naive_start_datetime)
+        end_datetime_str = request.POST.get("end_datetime")
+        if end_datetime_str:
+            naive_end_datetime = datetime.strptime(end_datetime_str, "%Y-%m-%dT%H:%M")  # Parse naive datetime
+            end_datetime = timezone.make_aware(naive_end_datetime)
         batch = request.POST.get("batch")
         branch = request.POST.get("branch")
+        project_type = request.POST.get("project_type")
         faculties = request.POST.getlist("faculties")
-        AllocationEvent.objects.create_event(user=user, name=name, start_datetime=start_datetime, end_datetime=end_datetime, batch=batch, branch=branch, faculties=faculties)
+        AllocationEvent.objects.create_event(user=user, name=name, project_type=project_type, start_datetime=start_datetime, end_datetime=end_datetime, batch=batch, branch=branch, faculties=faculties)
         logger.info(f"User: Admin created event {name}")
         # new_event = AllocationEvent(
         #     owner=user,  # Set the owner to the current user

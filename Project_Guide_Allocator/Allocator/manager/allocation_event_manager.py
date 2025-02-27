@@ -1,11 +1,12 @@
 from django.db import models
 
 class AllocationEventManager(models.Manager):
-    def create_event(self, user, name, start_datetime, end_datetime, batch, branch, faculties):
+    def create_event(self, user, name, project_type, start_datetime, end_datetime, batch, branch, faculties):
         # Create the event instance first
         event = self.create(
             owner=user,  # Set the owner to the current user
             event_name=name,
+            project_type=project_type,
             start_datetime=start_datetime,
             end_datetime=end_datetime,
             eligible_batch=batch,
