@@ -25,7 +25,7 @@ bash db_reset.sh
 ```bash
 python manage.py createsuperuser
 ```
-- Assign the admin you created by running the `role_builder.py` file.
+- Assign the admin you created by running the `role_assigner.py` file.
 - Redis Setup :
   - Install Redis
   - Remove comment from bind 127.0.0.1 in .conf file(redis.windows.config)
