@@ -78,12 +78,18 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                {% if request.user|has_permission:'add_student,Allocator' %}
+                {% if request.user|has_permission:'all_student,Allocator' %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'all_student' %}">Students</a></li>
+                {% endif %}
+                <!-- {% if request.user|has_permission:'add_student,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'add_student' %}">Add a new Student</a></li>
+                {% endif %} -->
+                {% if request.user|has_permission:'all_faculty,Allocator' %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'all_faculty' %}">Faculties</a></li>
                 {% endif %}
-                {% if request.user|has_permission:'add_faculty,Allocator' %}
+                <!-- {% if request.user|has_permission:'add_faculty,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'add_faculty' %}">Add a new Faculty</a></li>
-                {% endif %}
+                {% endif %} -->
                 {% if request.user|has_permission:'add_event,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'add_event' %}">Generate a New event</a></li>
                 {% endif %}

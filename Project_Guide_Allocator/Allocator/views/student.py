@@ -4,6 +4,7 @@ import re
 from django.db import IntegrityError
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from ..decorators import authorize_resource
@@ -177,3 +178,68 @@ def add_student(request):
         return render(request, "Allocator/add_student.html", {
             "users": new_student
         })
+
+@authorize_resource
+def edit_student(request, id):
+    student = get_object_or_404(Student, user_id=id)
+
+    if request.method == "POST":
+        student.user.first_name = request.POST.get("fname")
+        student.user.last_name = request.POST.get("lname")
+        student.user.email = request.POST.get("email")
+        student.user.mobile_number = request.POST.get("mobile_number")
+        
+        # Validate CGPA
+        try:
+            cgpa = float(request.POST.get("cgpa"))
+            if cgpa < 0.0 or cgpa > 10.0:
+                messages.error(request, "CGPA must be between 0.0 and 10.0.")
+                return redirect("edit_student", id=id)
+            student.cgpa = cgpa
+        except ValueError:
+            messages.error(request, "CGPA is not a valid number.")
+            return redirect("edit_student", id=id)
+
+        # Validate Academic Year
+        academic_year = request.POST.get("academic_year")
+        if not academic_year.isdigit() or len(academic_year) != 4:
+            messages.error(request, "Academic year must be a 4-digit number.")
+            return redirect("edit_student", id=id)
+        student.academic_year = academic_year
+
+        # Validate Branch
+        branch = request.POST.get("branch")
+        if branch not in ["AI", "IT"]:
+            messages.error(request, "Branch must be either 'AI' or 'IT'.")
+            return redirect("edit_student", id=id)
+        student.branch = branch
+
+        # Validate Mobile Number
+        mobile_number = request.POST.get("mobile_number")
+        if not re.fullmatch(r'^\d{10}$', mobile_number):
+            messages.error(request, "Mobile number must be exactly 10 digits.")
+            return redirect("edit_student", id=id)
+
+        student.user.save()
+        student.save()
+
+        messages.success(request, "Student details updated successfully!")
+        return redirect("all_student")
+
+    return render(request, "Allocator/edit_student.html", {"student": student})
+
+@authorize_resource
+def delete_student(request, id):
+    student = get_object_or_404(Student, user_id=id)
+
+    if request.method == "POST":
+        student.user.delete()  # Deleting user also deletes the associated Student record
+        messages.success(request, "Student deleted successfully!")
+        return redirect("all_student")
+
+    return render(request, "Allocator/delete_student.html", {"student": student})
+
+@authorize_resource
+def all_student(request):
+    students = Student.objects.all()
+    return render(request, "Allocator/all_student.html", {"students": students})
