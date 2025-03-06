@@ -58,8 +58,8 @@ def add_student(request):
 
                 has_backlog = request.POST.get("has_backlog") == 'true'
                 course_type = request.POST["course_type"]
-                has_internship = request.POST.get("has_internship") == 'true' if course_type == "M.Tech" else None
-
+                has_internship = request.POST.get("has_internship") == 'true' if course_type == "M.Tech" else False
+                
                 new_student = Student(
                     user=user,
                     cgpa=cgpa,
@@ -70,7 +70,6 @@ def add_student(request):
                     has_internship=has_internship
                 )
                 new_student.save()
-
                 student_role, created = Role.objects.get_or_create(role_name="student")
                 student_role.users.add(user)
                 student_role.save()

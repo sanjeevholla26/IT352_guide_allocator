@@ -9,7 +9,8 @@
 
 {% block body %}
 <div class="reg-userform">
-    <h1>BTech Major Project Choice filling</h1>
+    <!-- <h1>BTech Major Project Choice filling</h1> -->
+    <h1>{{ event }}</h1>
     {% if not locked %}
     <form method="POST" action="{% url 'create_or_edit_choicelist' id=event.id %}">
         {% csrf_token %}

@@ -16,6 +16,7 @@
                 <th scope="col">Event Name</th>
                 <th scope="col">Start date</th>
                 <th scope="col">End date</th>
+                <th scope="col">Course Type</th>
                 <th scope="col">View</th>
                 <th scope="col">Edit Event</th>
                 <th scope="col">Add Backlog</th>
@@ -28,6 +29,7 @@
                     <td style="font-weight: bolder; letter-spacing: 1.5px;"><strong>{{event.event_name}}</strong></td>
                     <td>{{event.start_datetime}}</td>
                     <td>{{event.end_datetime}}</td>
+                    <td>{{event.project_type}}</td>
                     <td><a href="{% url 'create_cluster' id=event.id %}"><button class="btn btn-success">
                         View
                      </button></a></td>
