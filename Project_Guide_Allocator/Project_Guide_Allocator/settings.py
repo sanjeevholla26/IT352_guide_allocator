@@ -15,10 +15,13 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-
-## ADD CREDENTIALS HERE
-## END
-
+TWILIO_ACCOUNT_SID=os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN=os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER=os.getenv('TWILIO_PHONE_NUMBER')
+EMAIL_HOST_USER=os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=os.getenv('EMAIL_HOST_PASSWORD')
+SECRET_KEY=os.getenv('SECRET_KEY')
+CAPTCHA_SECRET_KEY=os.getenv('CAPTCHA_SECRET_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,7 +37,7 @@ SECRET_KEY = 'django-insecure-@x%lw-46ix(ndb*%wdt%!wl&#y1s@wch+-x84!bl*5jp(sidy7
 DEBUG = True
 
 ADMIN_BYPASS = True
-QUICK_LOGIN = False
+QUICK_LOGIN = True
 SWIFT_OTP = True
 FAILS_COUNT = 3
 FAILS_DELAY = 1

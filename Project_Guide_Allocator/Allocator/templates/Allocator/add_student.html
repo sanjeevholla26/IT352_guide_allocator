@@ -51,6 +51,16 @@
                     required>
             </div>
             <div class="form-group">
+                <label for="course_type">Course Type</label>
+                <div>
+                    <input type="radio" id="btech" name="course_type" value="B.Tech" required>
+                    <label for="btech">B.Tech</label>
+            
+                    <input type="radio" id="mtech" name="course_type" value="M.Tech" required>
+                    <label for="mtech">M.Tech</label>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="branch">Branch</label>
                 <input type="text" class="form-control" id="branch" placeholder="Branch" name="branch" required>
             </div>
@@ -66,7 +76,13 @@
                     <option value="true">Yes</option>
                 </select>
             </div>
-            
+            <div class="form-group" id="internship_field" style="display: none;">
+                <label for="has_internship">Has Internship</label>
+                <select class="form-control" id="has_internship" name="has_internship">
+                    <option value="false" selected>No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>        
             <button type="submit" class="btn btn-primary">Add Student</button>
         </form>
         <form action="{% url 'add_student' %}" method="post" enctype="multipart/form-data" class="reg-userform-form">
@@ -81,7 +97,22 @@
         </form>
     </div>
 </div>
+<script>
+    window.addEventListener("DOMContentLoaded", (event) => {
+            const courseTypeRadios = document.getElementsByName("course_type");
+            const internshipField = document.getElementById("internship_field");
 
+            courseTypeRadios.forEach(radio => {
+                radio.addEventListener("change", function () {
+                    if (this.value === "M.Tech") {
+                        internshipField.style.display = "block";
+                    } else {
+                        internshipField.style.display = "none";
+                    }
+                });
+            });
+        });
+</script>
 <style>
     .reg-userform {
         /* background: white; */

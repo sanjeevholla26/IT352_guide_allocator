@@ -20,6 +20,19 @@
                 <input type="text" class="form-control" id="name" name="name" value="{{ event.event_name }}" placeholder="Enter event name" required>
             </div>
             <div class="form-group">
+                <label for="project_type">Project Type</label>
+                <div>
+                    <input type="radio" id="btech" name="project_type" value="B.Tech" required>
+                    <label for="btech">B.Tech</label>
+
+                    <input type="radio" id="mtechmaj" name="project_type" value="M.Tech Major" required>
+                    <label for="mtech">M.Tech Major</label>
+
+                    <input type="radio" id="mtechmin" name="project_type" value="M.Tech Minor" required>
+                    <label for="mtech">M.Tech Minor</label>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="start_datetime">Start DateTime</label>
                 <input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime" value="{{ event.start_datetime|date:'Y-m-d\TH:i' }}" required>
             </div>

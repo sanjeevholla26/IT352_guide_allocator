@@ -73,8 +73,19 @@ def create_or_edit_choicelist(request, id):
     e = AllocationEvent.objects.get(id=id)
     user_branch = request.user.student.branch
     user_batch = request.user.student.academic_year
-
-    if not user_branch == e.eligible_branch or user_batch == e.eligible_batch:
+    event_batch = e.eligible_batch
+    user_course = request.user.student.course_type
+    user_internship = request.user.student.has_internship
+    project_type_check = True
+    if e.project_type == 'B.Tech':
+        project_type_check = user_course=="B.Tech"
+    elif e.project_type == 'M.Tech Minor':
+        project_type_check = (user_course=="M.Tech" and not user_internship)
+    else:
+        project_type_check = user_course=="M.Tech"
+    if isinstance(event_batch, str) and event_batch.isdigit():
+        event_batch=int(event_batch)
+    if not user_branch == e.eligible_branch or not user_batch == event_batch or not project_type_check:
         return HttpResponseRedirect(reverse('home'))
     else:
         if request.method == "POST":

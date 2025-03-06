@@ -6,7 +6,7 @@ from ..models import AllocationEvent, Faculty,Student
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
-
+from datetime import datetime
 
 import logging
 
@@ -18,12 +18,21 @@ def add_event(request):
     if request.method == "POST":
         user = request.user
         name = request.POST.get("name")
-        start_datetime = request.POST.get("start_datetime")
-        end_datetime = request.POST.get("end_datetime")
+        start_datetime_str = request.POST.get("start_datetime")
+        if start_datetime_str:
+            naive_start_datetime = datetime.strptime(start_datetime_str, "%Y-%m-%dT%H:%M")  # Parse naive datetime
+            start_datetime = timezone.make_aware(naive_start_datetime)
+        end_datetime_str = request.POST.get("end_datetime")
+        if end_datetime_str:
+            naive_end_datetime = datetime.strptime(end_datetime_str, "%Y-%m-%dT%H:%M")  # Parse naive datetime
+            end_datetime = timezone.make_aware(naive_end_datetime)
         batch = request.POST.get("batch")
+        if batch and batch.isdigit():
+            batch = int(batch)
         branch = request.POST.get("branch")
+        project_type = request.POST.get("project_type")
         faculties = request.POST.getlist("faculties")
-        AllocationEvent.objects.create_event(user=user, name=name, start_datetime=start_datetime, end_datetime=end_datetime, batch=batch, branch=branch, faculties=faculties)
+        AllocationEvent.objects.create_event(user=user, name=name, project_type=project_type, start_datetime=start_datetime, end_datetime=end_datetime, batch=batch, branch=branch, faculties=faculties)
         logger.info(f"User: Admin created event {name}")
         # new_event = AllocationEvent(
         #     owner=user,  # Set the owner to the current user
@@ -50,7 +59,7 @@ def add_event(request):
 def edit_event(request, id):
     event = get_object_or_404(AllocationEvent, id=id)  # Get the event instance
     if request.method == 'POST':
-        AllocationEvent.objects.update_event(event=event, name=request.POST.get('name'), start_datetime=request.POST.get('start_datetime'), end_datetime=request.POST.get('end_datetime'), batch=request.POST.get('batch'), branch=request.POST.get('branch'), faculties=request.POST.getlist('faculties'))
+        AllocationEvent.objects.update_event(event=event, name=request.POST.get('name'), project_type=request.POST.get('project_type'), start_datetime=request.POST.get('start_datetime'), end_datetime=request.POST.get('end_datetime'), batch=request.POST.get('batch'), branch=request.POST.get('branch'), faculties=request.POST.getlist('faculties'))
         logger.info(f"User: Admin updated event {request.POST.get('name')}")
         # Handle form submission
         # event.event_name = request.POST.get('name')
@@ -83,6 +92,12 @@ def all_events(request): # needs changes
         student=request.user.student
         if user_backlog is False:
             eligible_events = active_events.filter(eligible_batch=user_batch, eligible_branch=user_branch)
+            if student.course_type == 'B.Tech':
+                eligible_events = active_events.filter(project_type="B.Tech")
+            elif not student.has_internship:
+                eligible_events = [event for event in active_events if event.project_type in {"M.Tech Major", "M.Tech Minor"}]
+            else:
+                eligible_events = active_events.filter(project_type="M.Tech Major")
 
             return render(request, "Allocator/all_events.html", {
                 "events" : eligible_events
@@ -144,7 +159,14 @@ def event_results(request, id):
 
 def add_backlog(request,id):
     if request.method=="GET":
+        event = get_object_or_404(AllocationEvent, id=id)
         students=Student.objects.all()
+        if event.project_type == "B.Tech":
+            students = students.filter(course_type="B.Tech")
+        elif event.project_type == "M.Tech Minor":
+            students = students.filter(course_type="M.Tech", has_internship=False)
+        else:
+            students = students.filter(course_type="M.Tech")
         backlog_students = students.filter(has_backlog=True)
         return render(request,"add_backlog.html",{
             "id":id,
