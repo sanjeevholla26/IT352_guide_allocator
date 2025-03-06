@@ -9,9 +9,9 @@
 
 {% block body %}
 <div class="reg-userform">
-    <!-- <h1>BTech Major Project Choice filling</h1> -->
+    <h1>BTech Major Project Choice filling</h1>
     <h1>{{ event }}</h1>
-    {% if not locked %}
+    {% if event.status == 'open' %}
     <form method="POST" action="{% url 'create_or_edit_choicelist' id=event.id %}">
         {% csrf_token %}
         <input type="hidden" name="event_id" value="{{ event.id }}">

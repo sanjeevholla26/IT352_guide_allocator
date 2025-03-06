@@ -33,7 +33,7 @@
                     <td><a href="{% url 'create_cluster' id=event.id %}"><button class="btn btn-success">
                         View
                      </button></a></td>
-                     <td><a href="{% url 'edit_event' id=event.id %}"><button class="btn btn-success" {% if not event.is_active %}disabled{% endif %}>
+                     <td><a href="{% url 'edit_event' id=event.id %}"><button class="btn btn-success">
                         Edit
                      </button></a></td>
                      <td><a href="{% url 'add_backlog' id=event.id %}"><button class="btn btn-success">
