@@ -1,4 +1,4 @@
-# IT303_Btech_Guide_Allocator
+# IT352_Btech_Guide_Allocator
 
 ## Set-up Instructions :
 

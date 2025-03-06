@@ -74,7 +74,7 @@ def edit_event(request, id):
         return redirect('home')  # Redirect to a success page or home
     else:
         # For GET request, render the form with existing values
-        faculties = Faculty.objects.all()  # Retrieve all faculties
+        faculties = Faculty.objects.all()  
         return render(request, 'Allocator/edit_event.html', {
             'event': event,
             'faculties': faculties
@@ -168,15 +168,17 @@ def add_backlog(request,id):
         else:
             students = students.filter(course_type="M.Tech")
         backlog_students = students.filter(has_backlog=True)
+        existing_backlogs = event.eligible_students.all()
         return render(request,"add_backlog.html",{
             "id":id,
-            "students":backlog_students
+            "students":backlog_students,
+            "existing_backlogs":existing_backlogs
         })
     else:
         event = get_object_or_404(AllocationEvent, id=id)  # Get the event instance
         students = request.POST.getlist("students")
-        event.start_datetime = request.POST.get('start_datetime')
-        event.end_datetime = request.POST.get('end_datetime')
+        # event.start_datetime = request.POST.get('start_datetime')
+        # event.end_datetime = request.POST.get('end_datetime')
         event.for_backlog=True
         event.eligible_students.set(students)
         event.save()

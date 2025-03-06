@@ -63,7 +63,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            {% if not locked and filled_preference|length > 0 %}
+            {% if event.status == 'open' and not locked and filled_preference|length > 0 %}
             <button type="button" class="btn btn-success lock-choice" onclick="submitForm('lock')">Lock Choices</button>
             {% endif %}
     </form>

@@ -36,7 +36,7 @@ def add_student(request):
                     messages.error(request, "CSV format is incorrect. Each row must have 9 fields.")
                     return redirect("add_student")
 
-                username, edu_email, email, fname, lname, mobile_number, cgpa, branch, academic_year, has_backlog = row
+                username, edu_email, email, fname, lname, mobile_number, cgpa, branch, academic_year, has_backlog, course_type, has_internship = row
 
                 # Validate email
                 if not edu_email.endswith("@nitk.edu.in"):
@@ -81,16 +81,17 @@ def add_student(request):
                         last_name=lname.strip()
                     )
                     user.save()
-
+                    if not has_internship:
+                        has_internship=False
                     new_student = Student(
                         user=user,
                         cgpa=cgpa,
                         academic_year=academic_year,
                         branch=branch,
-                        has_backlog=has_backlog
+                        has_backlog=has_backlog,
+                        course_type=course_type,
+                        has_internship=has_internship
                     )
-                    new_student.save()
-
                     # Assign the student role
                     student_role, _ = Role.objects.get_or_create(role_name="student")
                     student_role.users.add(user)
@@ -193,6 +194,7 @@ def edit_student(request, id):
         student.user.last_name = request.POST.get("lname")
         student.user.email = request.POST.get("email")
         student.user.mobile_number = request.POST.get("mobile_number")
+        student.has_backlog = request.POST.get("has_backlog") == "true"
         
         # Validate CGPA
         try:

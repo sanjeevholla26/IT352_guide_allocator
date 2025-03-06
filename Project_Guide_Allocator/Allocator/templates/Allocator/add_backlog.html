@@ -15,19 +15,20 @@
         <h5>Add Backlog Students Here</h5>
         <form action="{% url 'add_backlog' id=id%}" method="post" class="reg-userform-form">
             {% csrf_token %}
-            <div class="form-grsoup">
+            <!-- <div class="form-grsoup">
                 <label for="start_datetime">Start DateTime</label>
                 <input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime" required>
             </div>
             <div class="form-group">
                 <label for="end_datetime">End DateTime</label>
                 <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime" required>
-            </div>
+            </div> -->
             <div class="form-group">
                 <label for="students">Select Backlog Students</label>
                 <select id="students" class="form-control" name="students" multiple required>
                     {% for student in students %}
-                    <option value="{{student.user.id}}">{{ student.user }}</option>
+                    <option value="{{student.user.id}}"  {% for s in existing_backlogs %} {% if s.user.id is student.user.id %}
+                        selected {% endif %} {% endfor %}>{{ student.user }}</option>
                     {% endfor %}
                 </select>
             </div>

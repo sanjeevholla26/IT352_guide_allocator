@@ -15,9 +15,11 @@
                     <th>Roll Number</th>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Course</th>
                     <th>Branch</th>
                     <th>CGPA</th>
                     <th>Academic Year</th>
+                    <th>Internship</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -27,9 +29,16 @@
                     <td>{{ student.user.username }}</td>
                     <td>{{ student.user.first_name }} {{ student.user.last_name }}</td>
                     <td>{{ student.user.email }}</td>
+                    <td>{{ student.course_type }}</td>
                     <td>{{ student.branch }}</td>
                     <td>{{ student.cgpa }}</td>
                     <td>{{ student.academic_year }}</td>
+
+                    {% if student.has_internship %}:
+                      <td>Yes</td>
+                    {% else %}
+                      <td>No</td>
+                    {% endif %}
                     <td>
                         <a href="{% url 'edit_student' student.user.id %}" class="btn btn-warning btn-sm">Edit</a>
                         <a href="{% url 'delete_student' student.user.id %}" class="btn btn-danger btn-sm">Delete</a>
