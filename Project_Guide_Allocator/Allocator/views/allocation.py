@@ -44,26 +44,37 @@ def create_cluster(request, id):
         clusters = {}
         if get_event.for_backlog is False:
             students_choice_list = ChoiceList.objects.filter(event=get_event).order_by('-student__cgpa', 'student__user__username')
+            allotment_complete = True
             if get_event.cluster_count != 0:
                 for choice in students_choice_list:
                     cluster_no = choice.cluster_number
                     if cluster_no not in clusters:
                         clusters[cluster_no] = []
                     clusters[cluster_no].append(choice)
+                    if not choice.current_allocation:
+                        allotment_complete = False
+            else:
+                allotment_complete = False
             return render(request, "Allocator/create_cluster.html", {
                 "event" : get_event,
                 "clusters": clusters,
+                "allotment_complete": allotment_complete,
             })
         else:
             students_choice_list = ChoiceList.objects.filter(event=get_event)
             backlog_choices = students_choice_list.filter(student__has_backlog=True).order_by('-student__cgpa', 'student__user__username')
             student_choices = students_choice_list.filter(student__has_backlog=False).order_by('-student__cgpa', 'student__user__username')
+            allotment_complete = True
             if get_event.cluster_count != 0:
                 for choice in student_choices:
                     cluster_no = choice.cluster_number
                     if cluster_no not in clusters:
                         clusters[cluster_no] = []
                     clusters[cluster_no].append(choice)
+                    if not choice.current_allocation:
+                        allotment_complete = False
+            else:
+                allotment_complete = False
             backlog_allocated = backlog_choices.filter(current_allocation__isnull=False)
             backlog_not_allocated = backlog_choices.filter(current_allocation__isnull=True)
 
@@ -72,7 +83,8 @@ def create_cluster(request, id):
                 "clusters": clusters,
                 "backlog":backlog_not_allocated,
                 "backlog_alloted":backlog_allocated,
-                "id":id
+                "id":id,
+                "allotment_complete": allotment_complete,
             })
 
 @authorize_resource

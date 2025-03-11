@@ -6,12 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 {% endblock %}
 
-{% block title %} Add Event {% endblock %}
+{% block title %} Add Backlogs {% endblock %}
 
 {% block body %}
 <div class="reg-container">
     <div class="reg-userform">
-        <h1>IT BTech Major Project Guide Allocator</h1>
+        <h1>Project Guide Allocator</h1>
         <h5>Add Backlog Students Here</h5>
         <form action="{% url 'add_backlog' id=id%}" method="post" class="reg-userform-form">
             {% csrf_token %}

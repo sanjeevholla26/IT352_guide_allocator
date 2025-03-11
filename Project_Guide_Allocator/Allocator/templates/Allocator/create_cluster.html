@@ -28,7 +28,7 @@ Event Control
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Run Allocation</button>
         </form>
-        {% if backlog and backlog_not_allocated %}
+        {% if allotment_complete and not event.for_backlog and not backlog_not_allocated %}
             <form action="{% url 'generate_student_pdf' id=event.id %}" method="post" class="reg-userform-form">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary">Send reports to students</button>
