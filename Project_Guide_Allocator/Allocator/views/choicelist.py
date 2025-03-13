@@ -72,9 +72,9 @@ def choice_lock_otp(request, id):
 @authorize_resource
 def create_or_edit_choicelist(request, id):
     e = AllocationEvent.objects.get(id=id)
-    # if e.status == 'open' and timezone.now() > e.end_datetime:
-    #     e.status = 'locked'
-    #     e.save()
+    if e.status == 'open' and timezone.now() > e.end_datetime:
+        e.status = 'locked'
+        e.save()
     user_branch = request.user.student.branch
     user_batch = request.user.student.academic_year
     event_batch = e.eligible_batch

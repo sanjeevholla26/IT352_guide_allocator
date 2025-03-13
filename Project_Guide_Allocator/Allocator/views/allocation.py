@@ -13,9 +13,9 @@ logger = logging.getLogger('django')
 @authorize_resource
 def create_cluster(request, id):
     get_event = AllocationEvent.objects.get(id=id)
-    # if get_event.status == 'open' and timezone.now() > get_event.end_datetime:
-    #     get_event.status = 'locked'
-    #     get_event.save()
+    if get_event.status == 'open' and timezone.now() > get_event.end_datetime:
+        get_event.status = 'locked'
+        get_event.save()
     if request.method == "POST":
         # Use .count() to get the number of eligible faculties (many-to-many field)
         total_profs = get_event.eligible_faculties.count()

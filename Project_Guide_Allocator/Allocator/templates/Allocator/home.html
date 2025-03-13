@@ -11,10 +11,18 @@
     <div class="glass reg-userform">
         <h1>IT Dept Project Guide Allocator</h1>
         {% if request.user.first_name %}
-        <p>Hello {{request.user.first_name}},</p>
+        <p>Hello {{request.user.first_name}} {{request.user.last_name}},</p>
         {% endif %}
         <p>NITK Mail ID : {{request.user.edu_email}}</p>
-        <p>Username : {{request.user.username}}</p>
+        {% if student %}
+        <p>Roll Number : {{request.user.username}}</p>
+        <p>Course Type : {{ student.course_type }}</p>
+        <p>Branch and Batch : {{ student.branch }} {{ student.academic_year }}</p>
+        {% endif %}
+        {% if faculty %}
+        <p>Abbreviation : {{request.user.username}}</p>
+        {% endif %}
+        <p><a href="{% url 'change_password' %}"><button class="btn btn-primary">Change Password</button></a></p>
     </div>
     <style>
         .reg-userform {
