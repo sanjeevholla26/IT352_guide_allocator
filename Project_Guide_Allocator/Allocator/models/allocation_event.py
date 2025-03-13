@@ -5,6 +5,7 @@ from .myuser import MyUser
 from .faculty import Faculty
 from Allocator.manager.allocation_event_manager import AllocationEventManager
 from .student import Student
+from datetime import datetime
 
 class event_status(Enum):
     OPEN = 'open'
@@ -42,6 +43,24 @@ class AllocationEvent(models.Model):
 
     def __str__(self):
         return self.event_name
+    
+    
+    def save(self, *args, **kwargs):
+        """Automatically update the event status based on the current time."""
+        now = timezone.now()  # Ensure it's a timezone-aware datetime object
+
+        # Convert string to datetime if necessary
+        if isinstance(self.end_datetime, str):
+            self.end_datetime = datetime.fromisoformat(self.end_datetime)  # Convert ISO string to datetime
+            self.end_datetime = timezone.make_aware(self.end_datetime)  # Ensure timezone-aware
+
+        # Now the comparison will work
+        if self.status == event_status.OPEN.value and now > self.end_datetime:
+            self.status = event_status.LOCKED.value
+        elif self.status == event_status.LOCKED.value and now <= self.end_datetime:
+            self.status = event_status.OPEN.value
+
+        super().save(*args, **kwargs)
 
     @classmethod
     def active_events(cls):

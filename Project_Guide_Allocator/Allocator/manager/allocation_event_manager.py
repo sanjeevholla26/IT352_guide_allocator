@@ -44,6 +44,8 @@ class AllocationEventManager(models.Manager):
         if faculties is not None:
             event.eligible_faculties.set(faculties)
 
+        # event.status = 'open'
+
         # Save changes
         event.save()
 
