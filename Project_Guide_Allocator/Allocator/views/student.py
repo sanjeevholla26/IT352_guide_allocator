@@ -68,37 +68,37 @@ def add_student(request):
                     messages.error(request, f"Branch {branch} must be either 'AI' or 'IT'.")
                     continue
 
-                # Convert backlog field
                 has_backlog = has_backlog.strip().lower() == "true"
 
                 try:
-                    user = MyUser.objects.create_user(
-                        edu_email=edu_email.strip(),
-                        email=email.strip(),
-                        mobile_number=mobile_number.strip(),
-                        username=username.strip(),
-                        first_name=fname.strip(),
-                        last_name=lname.strip()
-                    )
-                    user.save()
-                    if not has_internship:
-                        has_internship=False
-                    new_student = Student(
-                        user=user,
-                        cgpa=cgpa,
-                        academic_year=academic_year,
-                        branch=branch,
-                        has_backlog=has_backlog,
-                        course_type=course_type,
-                        has_internship=has_internship
-                    )
-                    # Assign the student role
-                    student_role, _ = Role.objects.get_or_create(role_name="student")
-                    student_role.users.add(user)
-                    student_role.save()
+                    with transaction.atomic():
+                        user = MyUser.objects.create_user(
+                            edu_email=edu_email.strip(),
+                            email=email.strip(),
+                            mobile_number=mobile_number.strip(),
+                            username=username.strip(),
+                            first_name=fname.strip(),
+                            last_name=lname.strip(),
+                        )
+                        user.save()
+                        if not has_internship:
+                            has_internship=False
+                        new_student = Student(
+                            user=user,
+                            cgpa=cgpa,
+                            academic_year=academic_year,
+                            branch=branch,
+                            has_backlog=has_backlog,
+                            course_type=course_type,
+                            has_internship=has_internship
+                        )
+                        new_student.save()
+                        student_role, _ = Role.objects.get_or_create(role_name="student")
+                        student_role.users.add(user)
+                        student_role.save()
 
-                    logger.info(f"User: {user.username} added as Student")
-                    added_students += 1
+                        logger.info(f"User: {user.username} added as Student")
+                        added_students += 1
 
                 except IntegrityError:
                     messages.error(request, f"Roll number {username} already exists.")

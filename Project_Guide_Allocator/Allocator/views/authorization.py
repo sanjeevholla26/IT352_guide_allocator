@@ -3,14 +3,12 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from ..decorators import authorize_resource
 from ..models import MyUser, Role
-from django.db import IntegrityError
 from django.contrib import messages
 from ..email_sender import send_mail_page
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.urls import reverse
 from captcha.models import CaptchaStore
-from captcha.helpers import captcha_image_url
 from Project_Guide_Allocator.settings import ADMIN_BYPASS, QUICK_LOGIN, SWIFT_OTP, FAILS_COUNT, FAILS_DELAY, CAPTCHA_SECRET_KEY
 from django.utils import timezone
 from datetime import timedelta
@@ -191,41 +189,45 @@ def validatePassword(password):
     result = length>=6 and digits>=1 and alphas>=1 and others>=1 and upper>=1 and upper!=alphas
     return result
 
+def password_creation(request):
+    edu_email = request.POST["edu_email"]
+    password = request.POST["password"]
+    repassword = request.POST["repassword"]
+    next_url = request.POST["next"]
+    user = MyUser.objects.get(edu_email=edu_email)
+    if not user:
+        messages.error(request, "Invalid user.")
+        return HttpResponseRedirect(reverse(login_view))                
+    if is_user_blocked(user):
+        messages.error(request, f"User is blocked. Wait till {user.failed_blocked} to login.")
+        return HttpResponseRedirect(reverse(login_view))
+    if password != repassword:
+        return render(request, "Allocator/login_create_password.html", {
+            "message" : "Passwords don't match.",
+            "next": next_url,
+            "edu_email": edu_email
+        })
+    print(f"HI, {request}")
+    if validatePassword(password):
+        user.otp=None
+        user.set_password(password)
+        user.is_registered = True
+        user.save()
+        authenticate(request, edu_email=edu_email, password=password)
+        login(request, user)
+        logged_in(user)
+        return HttpResponseRedirect(next_url if next_url else reverse('home'))
+    else:
+        return render(request, "Allocator/login_create_password.html", {
+            "message" : "Invalid password format. Kindly read the rules and try again.",
+            "next": next_url,
+            "edu_email": edu_email
+        })  
+
 def create_password(request) :
     if not request.user.is_authenticated:
-        if request.method == "POST" :
-            edu_email = request.POST["edu_email"]
-            password = request.POST["password"]
-            repassword = request.POST["repassword"]
-            next_url = request.POST["next"]
-            user = MyUser.objects.get(edu_email=edu_email)
-            if not user:
-                messages.error(request, "Invalid user.")
-                return HttpResponseRedirect(reverse(login_view))                
-            if is_user_blocked(user):
-                messages.error(request, f"User is blocked. Wait till {user.failed_blocked} to login.")
-                return HttpResponseRedirect(reverse(login_view))
-            if password != repassword:
-                return render(request, "Allocator/login_create_password.html", {
-                    "message" : "Passwords don't match.",
-                    "next": next_url,
-                    "edu_email": edu_email
-                })
-            if validatePassword(password):
-                user.otp=None
-                user.set_password(password)
-                user.is_registered = True
-                user.save()
-                authenticate(request, edu_email=edu_email, password=password)
-                login(request, user)
-                logged_in(user)
-                return HttpResponseRedirect(next_url if next_url else reverse('home'))
-            else:
-                return render(request, "Allocator/login_create_password.html", {
-                    "message" : "Invalid password format. Kindly read the rules and try again.",
-                    "next": next_url,
-                    "edu_email": edu_email
-                })           
+        if request.method == "POST" : 
+            return password_creation(request)
         else :
             return HttpResponseRedirect(reverse(login_view))
     else :

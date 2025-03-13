@@ -1,7 +1,7 @@
 import re
 import csv
 import io
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -29,22 +29,23 @@ def add_faculty(request):
             added_faculties = 0
             for row in csv.reader(io_string, delimiter=',', quotechar='"'):
                 try:
-                    edu_email, email, username, fname, lname, mobile_number, abbreviation = row
-                    if not edu_email.endswith("@nitk.edu.in"):
-                        messages.error(request, f"Invalid NITK email for {username}.")
-                        continue
-                    if not re.fullmatch(r'^\d{10}$', mobile_number):
-                        messages.error(request, f"Invalid mobile number for {username}.")
-                        continue
-                    user = MyUser.objects.create_user(
-                        edu_email=edu_email, email=email, username=username,
-                        first_name=fname, last_name=lname, mobile_number=mobile_number
-                    )
-                    Faculty.objects.create_faculty(user=user, abbreviation=abbreviation)
-                    faculty_role, _ = Role.objects.get_or_create(role_name="faculty")
-                    faculty_role.users.add(user)
-                    logger.info(f"User: {username} added as Faculty via CSV upload")
-                    added_faculties += 1
+                    with transaction.atomic():
+                        edu_email, email, username, fname, lname, mobile_number, abbreviation = row
+                        if not edu_email.endswith("@nitk.edu.in"):
+                            messages.error(request, f"Invalid NITK email for {username}.")
+                            continue
+                        if not re.fullmatch(r'^\d{10}$', mobile_number):
+                            messages.error(request, f"Invalid mobile number for {username}.")
+                            continue
+                        user = MyUser.objects.create_user(
+                            edu_email=edu_email, email=email, username=username,
+                            first_name=fname, last_name=lname, mobile_number=mobile_number
+                        )
+                        Faculty.objects.create_faculty(user=user, abbreviation=abbreviation)
+                        faculty_role, _ = Role.objects.get_or_create(role_name="faculty")
+                        faculty_role.users.add(user)
+                        logger.info(f"User: {username} added as Faculty via CSV upload")
+                        added_faculties += 1
                 except IntegrityError:
                     messages.error(request, f"Employee ID {username} already exists.")
                 except Exception as e:
