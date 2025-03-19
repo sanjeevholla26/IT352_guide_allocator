@@ -15,37 +15,74 @@ Event Control
     <h1>Run allocation:</h1>
     {% if event.status == 'open' %}
         <p>Faculty selection is still going on</p>
-    {% elif event.status == 'closed' %}
-        <p>This event is over</p>
     {% else %}
-        {% if event.cluster_count == 0 %}
-        <form action="{% url 'create_cluster' id=event.id %}" method="post" class="reg-userform-form">
+        <!-- Backlog Students Section -->
+        {% if backlog %}
+        <h2>Backlog Students Allocation</h2>
+        <form action="{% url 'allot_backlog' id=id %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Create Cluster</button>
+            <table border="1" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>CGPA</th>
+                        <th>Preference Choices</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for choice in backlog %}
+                    <tr>
+                        <td>{{ choice.student.user.username }}</td>
+                        <td>{{ choice.student.cgpa }}</td>
+                        <td>
+                            <!-- Hidden input to store the student ID -->
+                            <input type="hidden" name="student_{{ choice.id }}" value="{{ choice.student.user.id }}">
+                            {% for preference in choice.preference_list %}
+                            <div>
+                                <input type="radio" name="faculty_{{ choice.id }}" value="{{ preference.facultyID }}" id="pref_{{ choice.id }}_{{ forloop.counter }}">
+                                <label for="pref_{{ choice.id }}_{{ forloop.counter }}">
+                                    {{ preference.choiceNo }}: {{ preference.facultyID|get_faculty_abbreviation }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Allot</button>
         </form>
         {% else %}
-        <form action="{% url 'run_allocation' id=event.id %}" method="post" class="reg-userform-form">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Run Allocation</button>
-        </form>
-        {% if allotment_complete and not event.for_backlog and not backlog_not_allocated %}
-            <form action="{% url 'generate_student_pdf' id=event.id %}" method="post" class="reg-userform-form">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Send reports to students</button>
-            </form>
-            <form action="{% url 'generate_faculty_pdf' id=event.id %}" method="post" class="reg-userform-form">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Send reports to faculty</button>
-            </form>
-            <form action="{% url 'generate_admin_pdf' id=event.id %}" method="post" class="reg-userform-form">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Send reports to admin</button>
-            </form>
+            {% if event.cluster_count == 0 %}
+                <form action="{% url 'create_cluster' id=event.id %}" method="post" class="reg-userform-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Create Cluster</button>
+                </form>
+            {% else %}
+                {% if not allotment_complete %}
+                    <form action="{% url 'run_allocation' id=event.id %}" method="post" class="reg-userform-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Run Allocation</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'generate_student_pdf' id=event.id %}" method="post" class="reg-userform-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Send reports to students</button>
+                    </form>
+                    <form action="{% url 'generate_faculty_pdf' id=event.id %}" method="post" class="reg-userform-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Send reports to faculty</button>
+                    </form>
+                    <form action="{% url 'generate_admin_pdf' id=event.id %}" method="post" class="reg-userform-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Send reports to admin</button>
+                    </form>
+                    <form action="{% url 'reset_allocation' id=event.id %}" method="post" class="reg-userform-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Reset Allocation</button>
+                    </form>
+                {% endif %}
         {% endif %}
-        <form action="{% url 'reset_allocation' id=event.id %}" method="post" class="reg-userform-form">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Reset Allocation</button>
-        </form>
 
         <h2>Cluster Assignment Summary</h2>
         {% for cluster_number, choices in clusters.items %}
@@ -119,45 +156,6 @@ Event Control
                 {% endfor %}
             </tbody>
         </table>
-        {% endif %}
-
-
-        <!-- Backlog Students Section -->
-        {% if backlog %}
-        <h2>Backlog Students Allocation</h2>
-        <form action="{% url 'allot_backlog' id=id %}" method="post">
-            {% csrf_token %}
-            <table border="1" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Student</th>
-                        <th>CGPA</th>
-                        <th>Preference Choices</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for choice in backlog %}
-                    <tr>
-                        <td>{{ choice.student.user.username }}</td>
-                        <td>{{ choice.student.cgpa }}</td>
-                        <td>
-                            <!-- Hidden input to store the student ID -->
-                            <input type="hidden" name="student_{{ choice.id }}" value="{{ choice.student.user.id }}">
-                            {% for preference in choice.preference_list %}
-                            <div>
-                                <input type="radio" name="faculty_{{ choice.id }}" value="{{ preference.facultyID }}" id="pref_{{ choice.id }}_{{ forloop.counter }}">
-                                <label for="pref_{{ choice.id }}_{{ forloop.counter }}">
-                                    {{ preference.choiceNo }}: {{ preference.facultyID|get_faculty_abbreviation }}
-                                </label>
-                            </div>
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <button type="submit" class="btn btn-primary">Allot</button>
-        </form>
         {% endif %}
         {% endif %}
 </div>
