@@ -6,6 +6,7 @@ from ..models import MyUser, Role
 from django.contrib import messages
 from ..email_sender import send_mail_page
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import check_password
 from django.urls import reverse
 from django.urls import reverse
 from captcha.models import CaptchaStore
@@ -207,8 +208,13 @@ def password_creation(request):
             "next": next_url,
             "edu_email": edu_email
         })
-    print(f"HI, {request}")
     if validatePassword(password):
+        # print(user.password)
+        # print(password)
+        # print(check_password(password, user.password))
+        if user.is_registered and check_password(password, user.password):
+            messages.error(request, "New password is the same as Old password.")
+            return HttpResponseRedirect(reverse("home"))
         user.otp=None
         user.set_password(password)
         user.is_registered = True
@@ -216,6 +222,7 @@ def password_creation(request):
         authenticate(request, edu_email=edu_email, password=password)
         login(request, user)
         logged_in(user)
+        messages.error(request, "New Password created successfully.")
         return HttpResponseRedirect(next_url if next_url else reverse('home'))
     else:
         return render(request, "Allocator/login_create_password.html", {
