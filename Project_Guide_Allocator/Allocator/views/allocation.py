@@ -103,16 +103,15 @@ def reset_allocation(request, id):
         get_event = AllocationEvent.objects.get(id=id)
         students_choice_list = ChoiceList.objects.filter(event=get_event)
         for s in students_choice_list:
-            check_backlog=s.student.has_backlog
-            if check_backlog is False:
-                s.current_allocation = None
-                s.current_index = 1
-                s.save()
+            s.current_allocation = None
+            s.current_index = 1
+            s.save()
 
         clashes = Clashes.objects.filter(event=get_event)
         for c in clashes:
             c.is_processed = True
             c.save()
+        
         logger.info(f"Admin reset allocation for event : {get_event.event_name}")
         return HttpResponseRedirect(reverse(create_cluster, args=(id, )))
     else:
