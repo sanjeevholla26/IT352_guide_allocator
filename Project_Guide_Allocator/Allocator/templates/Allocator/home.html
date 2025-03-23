@@ -4,59 +4,169 @@
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-{%endblock%}
-{%block title%} Home {%endblock%}
+{% endblock %}
+{% block title %} Home {% endblock %}
 
 {% block body %}
-    <div class="glass reg-userform">
-        <h1>IT Dept Project Guide Allocator</h1>
-        {% if request.user.first_name %}
-        <p>Hello {{request.user.first_name}} {{request.user.last_name}},</p>
-        {% endif %}
-        <p>NITK Mail ID : {{request.user.edu_email}}</p>
+<div class="header-container">
+    <div class="header-box">
+        IT Dept Project Guide Allocator
+    </div>
+</div>
+
+<!-- Flexbox container for ID card and message box -->
+<div class="dashboard-container">
+    <!-- ID Card -->
+    <div class="id-card">
+        <div class="profile-pic">
+            <img src="https://ui-avatars.com/api/?name={{ request.user.first_name }}+{{ request.user.last_name }}&background=random&size=100"
+                 alt="User Avatar">
+        </div>
+        <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+        <p class="email">{{ request.user.edu_email }}</p>
         {% if student %}
-        <p>Roll Number : {{request.user.username}}</p>
-        <p>Course Type : {{ student.course_type }}</p>
-        <p>Branch and Batch : {{ student.branch }} {{ student.academic_year }}</p>
+            <p><strong>Roll Number:</strong> {{ request.user.username }}</p>
+            <p><strong>Course Type:</strong> {{ student.course_type }}</p>
+            <p><strong>Branch & Batch:</strong> {{ student.branch }} - {{ student.academic_year }}</p>
         {% endif %}
         {% if faculty %}
-        <p>Abbreviation : {{request.user.username}}</p>
+            <p><strong>Abbreviation:</strong> {{ request.user.username }}</p>
         {% endif %}
-        <p><a href="{% url 'change_password' %}"><button class="btn btn-primary">Change Password</button></a></p>
+        <a href="{% url 'change_password' %}">
+            <button class="btn btn-primary">Change Password</button>
+        </a>
     </div>
-    <style>
-        .reg-userform {
-            /* background: white; */
-            padding: 3%;
-            max-width: 1100px;
-            margin: auto;
-            border-radius: 1;
-            filter: none;
+
+    <!-- Instructions & Messages -->
+    <div class="message-box">
+        <h3>Instructions</h3>
+        <ul>
+            <li>Please complete your profile details.</li>
+            <li>Check your allocated project guide in the system.</li>
+            <li>Contact your guide if you have any queries.</li>
+        </ul>
+
+        <h3>Important Messages</h3>
+        <p>Project submission deadline: <strong>15th April 2025</strong></p>
+        <p>Next meeting with faculty: <strong>5th March 2025</strong></p>
+    </div>
+</div>
+
+<style>
+    .header-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .header-box {
+        border: solid #253b50;
+        font-size: 36.2px;
+        font-weight: bold;
+        text-align: center;
+        padding: 15px 30px;
+        border-radius: 12px;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Flex container for desktop view */
+    .dashboard-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 30px;
+        margin-top: 30px;
+        flex-wrap: wrap; /* Ensures wrapping for smaller screens */
+    }
+
+    /* ID Card */
+    .id-card {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        padding: 30px;
+        width: 400px;
+        text-align: center;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .profile-pic img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid white;
+        margin-bottom: 15px;
+    }
+
+    .id-card h2 {
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .id-card p {
+        font-size: 16px;
+        margin: 8px 0;
+    }
+
+    .email {
+        font-size: 14px;
+        font-style: italic;
+    }
+
+    /* Message Box */
+    .message-box {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        padding: 20px;
+        width: 600px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .message-box h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #253b50;
+        padding-bottom: 5px;
+    }
+
+    .message-box ul {
+        padding-left: 20px;
+    }
+
+    .message-box ul li {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .message-box p {
+        font-size: 15px;
+        margin-top: 10px;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 767px) {
+        .dashboard-container {
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center items */
         }
 
-        .reg-userform>h1 {
-            font-weight: bolder;
-            letter-spacing: 1.5px;
-            border-bottom: solid;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
+        .id-card {
+            width: 90%; /* Adjust width for smaller screens */
+            padding: 20px;
         }
 
-        .reg-userform>h5 {
-            font-weight: bolder;
-            margin-left: 2%;
+        .message-box {
+            width: 90%; /* Adjust width for smaller screens */
+            padding: 20px;
         }
+    }
 
-        .reg-userform-form {
-            max-width: 600px;
-            margin-left: 2%;
-            margin-top: 2rem;
-        }
-
-        p {
-            margin-left: 3%;
-            margin-top: 1rem;
-        }
-    </style>
-    {% endblock %}
-
+</style>
+{% endblock %}
