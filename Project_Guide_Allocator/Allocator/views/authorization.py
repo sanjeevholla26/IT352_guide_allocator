@@ -6,6 +6,7 @@ from ..models import MyUser, Role
 from django.contrib import messages
 from ..email_sender import send_mail_page
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import check_password
 from django.urls import reverse
 from django.urls import reverse
 from captcha.models import CaptchaStore
@@ -207,8 +208,13 @@ def password_creation(request):
             "next": next_url,
             "edu_email": edu_email
         })
-    print(f"HI, {request}")
     if validatePassword(password):
+        # print(user.password)
+        # print(password)
+        # print(check_password(password, user.password))
+        if user.is_registered and check_password(password, user.password):
+            messages.error(request, "New password is the same as Old password.")
+            return HttpResponseRedirect(reverse("home"))
         user.otp=None
         user.set_password(password)
         user.is_registered = True
@@ -216,6 +222,7 @@ def password_creation(request):
         authenticate(request, edu_email=edu_email, password=password)
         login(request, user)
         logged_in(user)
+        messages.error(request, "New Password created successfully.")
         return HttpResponseRedirect(next_url if next_url else reverse('home'))
     else:
         return render(request, "Allocator/login_create_password.html", {
@@ -261,6 +268,62 @@ def complete_login(request) :
     else :
         return HttpResponseRedirect(reverse('home'))
 
+def forgot_password(request) :
+    if not request.user.is_authenticated:
+        if request.method == "POST" :
+            edu_email = request.POST["edu_email"]
+            user =  MyUser.objects.get(edu_email=edu_email)
+            # logger.info(f"User: {user.username} logged in")
+            if user is not None :
+                if is_user_blocked(user):
+                    messages.error(request, f"User is blocked. Wait till {user.failed_blocked} to login.")
+                    return HttpResponseRedirect(reverse(login_view))
+                user.otp = None
+                user.save()
+                user.otp = generate_otp()
+                user.save()
+                recv_name = "User"
+                if user.first_name:
+                    recv_name = user.first_name
+                if not SWIFT_OTP:
+                    send_mail_page(user.edu_email, 'Password reset OTP', f"Dear {recv_name},\nYour password reset OTP(One Time Password) is {user.otp}. Kindly use this OTP to reset your password.\nThank you.\nProject Guide Allocator Team.")
+                return render(request, "Allocator/login_otp.html", {"message": "OTP has been sent to your email. Please enter it below.","edu_email": user.edu_email, "reset_pswd": True, "next_url": None})
+            else:
+                logger.exception(f"IP: {request.META.get('REMOTE_ADDR')} failed to login")
+                messages.error(request, f"Wrong Password. Kindly try again. {failed_attempt(edu_email)}")
+                return HttpResponseRedirect(reverse(login_view))
+        else :
+            return HttpResponseRedirect(reverse(login_view))
+    else :
+        return HttpResponseRedirect(reverse('home'))
+
+def forgot_password_otp(request) :
+    if not request.user.is_authenticated:
+        if request.method == "POST" :
+            edu_email = request.POST["edu_email"]
+            user =  MyUser.objects.get(edu_email=edu_email)
+            # logger.info(f"User: {user.username} logged in")
+            if user is not None :
+                if is_user_blocked(user):
+                    messages.error(request, f"User is blocked. Wait till {user.failed_blocked} to login.")
+                    return HttpResponseRedirect(reverse(login_view))
+                user.otp = None
+                user.is_registered=False
+                user.save()
+                recv_name = "User"
+                if user.first_name:
+                    recv_name = user.first_name
+                send_mail_page(user.edu_email, 'Password Reset Confirmed', f"Dear {recv_name},\nYour password has been reset. Kindly login again to set a new password.\nThank you.\nProject Guide Allocator Team.")
+                messages.error(request, f"Your password has been reset, kindly relogin to create a new passwod.")
+                return HttpResponseRedirect(reverse('home'))
+            else:
+                logger.exception(f"IP: {request.META.get('REMOTE_ADDR')} failed to login")
+                messages.error(request, f"Wrong Password. Kindly try again. {failed_attempt(edu_email)}")
+                return HttpResponseRedirect(reverse(login_view))
+        else :
+            return HttpResponseRedirect(reverse(login_view))
+    else :
+        return HttpResponseRedirect(reverse('home'))
 
 def logout_view(request) :
     if request.user.is_authenticated:

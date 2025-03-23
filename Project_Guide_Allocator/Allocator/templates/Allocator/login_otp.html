@@ -23,8 +23,11 @@
             </a>
         </h1>
         <h5>Enter the OTP</h5>
-
+        {% if reset_pswd %}
+        <form action="{% url 'forgot_password_otp' %}" method="post" class="reg-userform-form">
+        {% else %}
         <form action="{% url 'otp' %}" method="post" class="reg-userform-form">
+        {% endif %}
             {% csrf_token %}
 
             <div class="form-group">
