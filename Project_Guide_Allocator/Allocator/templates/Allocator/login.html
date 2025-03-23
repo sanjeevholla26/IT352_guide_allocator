@@ -6,102 +6,161 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {%endblock%}
+
 {% block title %} Login {%endblock%}
 
 {% block body %}
 <div class="reg-container">
-    {% if message is not none %}
+    {% if messages %}
     <div class="alert alert-danger" role="alert">
-        {{message}}
+            {% for message in messages %}
+            <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+            {% endfor %}
     </div>
     {% endif %}
 
     <div class="reg-userform glass">
-        <h1 class="header-title">
-            <div class="actual-title">Project Guide Allocator</div>
+        <div class="header-container">
+            <h1 class="header-title">GuideMate</h1>
             <a class="nav-link" href="https://www.nitk.ac.in/">
                 <img src="{% static 'nitkLogo.svg' %}" class="nitk-logo" alt="NITK Logo">
             </a>
-        </h1>
-        <h5>Login Here</h5>
+        </div>
+
+        <h5 class="subtitle">Login Here</h5>
 
         <form action="{% url 'login' %}" method="post" class="reg-userform-form">
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="exampleInputEmail1">NITK EDU Mail-ID</label>
+                <label for="exampleInputEmail1">NITK EDU Mail ID</label>
                 <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
                     placeholder="NITK mail ID" name="edu_email" required>
-                <small id="emailHelp" class="form-text text-muted">The NITK ID must be unique</small>
                 <div class="g-recaptcha" data-sitekey="6LcGOVsqAAAAAFsMBz_UDf4KgOafYm7WZgF_Vu4l"></div>
             </div>
-            
-            
+
             <input type="hidden" name="next" value="{{ request.GET.next }}">
             <button type="submit" class="btn btn-primary">Login</button>
-            
         </form>
-        
-        
     </div>
 </div>
 
 <style>
-    .reg-userform {
-        /* background: white; */
-        padding: 3%;
-        max-width: 1100px;
-        margin: auto;
-        border-radius: 1;
-        filter: none;
-    }
+/* Ensures full height and centers the form */
+body, html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+}
 
-    .reg-userform>h1 {
-        font-weight: bolder;
-        letter-spacing: 1.5px;
-        border-bottom: solid;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
+/* Container */
+.reg-container {
+    width: 90%;
+    max-width: 420px;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
 
-    .reg-userform h1.header-title {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bolder;
-        letter-spacing: 1.5px;
-        border-bottom: solid;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
+/* Header styling */
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    background-color: #253b50; /* Dark Blue/Purple */
+    padding: 15px;
+    border-radius: 8px 8px 8px 8px;
+}
 
-    .reg-userform h1.header-title .nav-link {
-        margin-left: 1rem;
-    }
+.header-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: white;
+    margin: 0;
+}
 
-    .actual-title {
-        margin-right: 8.5rem;
+.nitk-logo {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Subtitles */
+.subtitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+/* Form adjustments */
+.form-group {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Input fields */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+/* Adjust spacing and centering for captcha */
+.g-recaptcha {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+/* Submit button */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 6px;
+    background: #007bff;
+    color: white;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+/* Mobile-friendly adjustments */
+@media (max-width: 480px) {
+    .reg-container {
+        width: 95%;
+        padding: 1.5rem;
     }
 
     .nitk-logo {
-        width: 5rem;
-        height: 5rem;
+        width: 2.5rem;
+        height: 2.5rem;
     }
-
-    .reg-userform>h5 {
-        font-weight: bolder;
-        margin-left: 2%;
-    }
-
-    .reg-userform-form {
-        max-width: 600px;
-        margin-left: 2%;
-        margin-top: 2rem;
-    }
-
-    p {
-        margin-left: 3%;
-        margin-top: 1rem;
-    }
+}
 </style>
 {% endblock %}

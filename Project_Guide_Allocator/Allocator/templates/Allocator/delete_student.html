@@ -8,9 +8,9 @@
     <div class="reg-userform glass">
         <h1>Project Guide Allocator</h1>
         <h5>Confirm Delete</h5>
-        
+
         <p>Are you sure you want to delete <strong>{{ student.user.first_name }} {{ student.user.last_name }}</strong>?</p>
-        
+
         <form method="POST">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Delete</button>
@@ -28,7 +28,7 @@
       border-radius: 1;
       filter: none;
     }
-  
+
     .reg-userform > h1 {
       font-weight: bolder;
       letter-spacing: 1.5px;
@@ -36,28 +36,28 @@
       padding: 1rem;
       margin-bottom: 1.5rem;
     }
-  
+
     .reg-userform > h5 {
       font-weight: bolder;
       margin-left: 2%;
     }
-  
+
     .table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
-  
+
     .table th, .table td {
       border: 1px solid #ddd;
       padding: 10px;
       text-align: center;
     }
-  
+
     .table th {
       background-color: #f4f4f4;
     }
-  
+
     .btn {
       margin: 5px;
     }
