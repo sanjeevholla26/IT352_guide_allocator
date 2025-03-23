@@ -1,47 +1,79 @@
 {% extends './home_layout.html' %}
 {% load static %}
-{% block head %}
-<meta charset="UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-{%endblock%}
-{%block title%} All Events {%endblock%}
+
+{% block title %} All Events {% endblock %}
 
 {% block body %}
-    <div>
-        <table class="table table-striped glass">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Event Name</th>
-                <th scope="col">Start date</th>
-                <th scope="col">End date</th>
-                <th scope="col">Course Type</th>
-                <th scope="col">View</th>
-                <th scope="col">Edit Event</th>
-                <th scope="col">Add Backlog</th>
-            </tr>
+<div class="card shadow-lg">
+    <div class="card-header p-4 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fs-4">
+            <i class="bi bi-calendar-event me-2"></i> Events Dashboard
+        </h5>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+    <div class="card-body table-responsive">
+        <table id="eventsTable" class="table table-striped">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Event Name</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Course Type</th>
+                    <th scope="col">View</th>
+                    <th scope="col">Edit Event</th>
+                    <th scope="col">Add Backlog</th>
+                </tr>
             </thead>
             <tbody>
-            {% for event in events %}
-                <tr>
-                    <th scope="row" style="width: 3rem;">{{forloop.counter}}</th>
-                    <td style="font-weight: bolder; letter-spacing: 1.5px;"><strong>{{event.event_name}}</strong></td>
-                    <td>{{event.start_datetime}}</td>
-                    <td>{{event.end_datetime}}</td>
-                    <td>{{event.project_type}}</td>
-                    <td><a href="{% url 'create_cluster' id=event.id %}"><button class="btn btn-success">
-                        View
-                     </button></a></td>
-                     <td><a href="{% url 'edit_event' id=event.id %}"><button class="btn btn-success">
-                        Edit
-                     </button></a></td>
-                     <td><a href="{% url 'add_backlog' id=event.id %}"><button class="btn btn-success">
-                        Add Backlog
-                     </button></a></td>
-                </tr>
-            {% endfor %}
+                {% for event in events %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td><strong>{{ event.event_name }}</strong></td>
+                        <td>{{ event.start_datetime }}</td>
+                        <td>{{ event.end_datetime }}</td>
+                        <td>{{ event.project_type }}</td>
+                        <td>
+                            <a href="{% url 'create_cluster' id=event.id %}" class="btn btn-success btn-sm">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'edit_event' id=event.id %}" class="btn btn-warning btn-sm">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'add_backlog' id=event.id %}" class="btn btn-danger btn-sm">
+                                <i class="bi bi-journal-x"></i> Add Backlog
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">No events found.</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
+</div>
+
+<!-- Bootstrap Icons CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#eventsTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthChange": false
+        });
+    });
+</script>
 {% endblock %}

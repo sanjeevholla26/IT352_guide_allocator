@@ -188,9 +188,9 @@
                 {% if request.user|has_permission:'all_faculty,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'all_faculty' %}">Faculties</a></li>
                 {% endif %}
-                {% if request.user|has_permission:'all_events,Allocator' %}
+                <!-- {% if request.user|has_permission:'all_events,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'events' %}">Events</a></li>
-                {% endif %}
+                {% endif %} -->
                 {% if request.user|has_permission:'add_event,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'add_event' %}">Generate a New event</a></li>
                 {% endif %}

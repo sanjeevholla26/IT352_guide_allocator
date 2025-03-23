@@ -1,73 +1,36 @@
 {% extends './home_layout.html' %}
 {% load static %}
-{% block head %}
-<meta charset="UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-{% endblock %}
 
 {% block title %} Add Backlogs {% endblock %}
 
 {% block body %}
-<div class="reg-container">
-    <div class="reg-userform">
-        <h1>Project Guide Allocator</h1>
-        <h5>Add Backlog Students Here</h5>
-        <form action="{% url 'add_backlog' id=id%}" method="post" class="reg-userform-form">
-            {% csrf_token %}
-            <!-- <div class="form-grsoup">
-                <label for="start_datetime">Start DateTime</label>
-                <input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime" required>
-            </div>
-            <div class="form-group">
-                <label for="end_datetime">End DateTime</label>
-                <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime" required>
-            </div> -->
-            <div class="form-group">
-                <label for="students">Select Backlog Students</label>
-                <select id="students" class="form-control" name="students" multiple required>
-                    {% for student in students %}
-                    <option value="{{student.user.id}}"  {% for s in existing_backlogs %} {% if s.user.id is student.user.id %}
-                        selected {% endif %} {% endfor %}>{{ student.user }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Update Event</button>
-        </form>
+<div class="container mt-4">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-danger text-white p-4 d-flex justify-content-between align-items-center rounded-top">
+            <h5 class="mb-0 fs-4">
+                <i class="bi bi-exclamation-circle me-2"></i> Add Backlogs
+            </h5>
+            <a href="javascript:history.back()" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+        <div class="card-body bg-light p-4 rounded-bottom">
+            <form action="{% url 'add_backlog' id=id %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="students" class="form-label">Select Backlog Students</label>
+                    <select id="students" class="form-select" name="students" multiple required>
+                        {% for student in students %}
+                        <option value="{{ student.user.id }}" {% for s in existing_backlogs %} {% if s.user.id is student.user.id %} selected {% endif %} {% endfor %}>
+                            {{ student.user }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-danger">Update Event</button>
+            </form>
+        </div>
     </div>
 </div>
-
-<style>
-    .reg-userform {
-        background: white;
-        padding: 3%;
-        max-width: 1100px;
-        margin: auto;
-        border-radius: 0;
-        filter: none;
-    }
-
-    .reg-userform>h1 {
-        font-weight: bolder;
-        letter-spacing: 1.5px;
-        border-bottom: solid;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .reg-userform>h5 {
-        font-weight: bolder;
-        margin-left: 2%;
-    }
-
-    .reg-userform-form {
-        max-width: 600px;
-        margin-left: 2%;
-        margin-top: 2rem;
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 {% endblock %}

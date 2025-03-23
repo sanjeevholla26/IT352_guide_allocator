@@ -37,7 +37,7 @@ SECRET_KEY = 'django-insecure-@x%lw-46ix(ndb*%wdt%!wl&#y1s@wch+-x84!bl*5jp(sidy7
 DEBUG = True
 
 ADMIN_BYPASS = True
-QUICK_LOGIN = False
+QUICK_LOGIN = True
 SWIFT_OTP = True
 FAILS_COUNT = 3
 FAILS_DELAY = 1
