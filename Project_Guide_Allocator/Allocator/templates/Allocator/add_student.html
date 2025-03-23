@@ -1,151 +1,113 @@
 {% extends './home_layout.html' %}
 {% load static %}
-{% block head %}
-<meta charset="UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-{%endblock%}
 
-{%block title%} Add Student {%endblock%}
+{% block title %} Add Student {% endblock %}
 
 {% block body %}
-<div class="reg-container">
-    <div class="reg-userform glass">
-        <h1>Project Guide Allocator</h1>
-        <h5>Add Student Here</h5>
-        <form action="{% url 'add_student' %}" method="post" class="reg-userform-form">
+<div class="card shadow-lg">
+    <div class="card-header p-4 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fs-4">
+            <i class="bi bi-people-fill me-2"></i> Add Student
+        </h5>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+    <div class="card-body p-5">
+        <form action="{% url 'add_student' %}" method="post" class="needs-validation" novalidate>
             {% csrf_token %}
-            <div class="form-group">
-                <label for="exampleInputEmail1">NITK EDU mail-ID</label>
-                <input type="email" class="form-control" id="edu_mail" aria-describedby="emailHelp"
-                    placeholder="Enter the student's NITK MailID" name="edu_mail" autocomplete="off" required>
-                <small id="nitkMailID" class="form-text text-muted">Enter the student's NITK mail ID.</small>
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                    placeholder="Enter email" name="email" autocomplete="off">
-            </div>
-            <div class="form-group">
-                <label for="username">First Name</label>
-                <input type="text" class="form-control" id="fname" aria-describedby="emailHelp"
-                    placeholder="Enter student's First Name" name="fname" autocomplete="off" required>
-            </div>
-            <div class="form-group">
-                <label for="username">Last Name</label>
-                <input type="text" class="form-control" id="lname" aria-describedby="emailHelp"
-                    placeholder="Enter student's Last Name" name="lname" autocomplete="off" required>
-            </div>
-            <div class="form-group">
-                <label for="username">Roll No</label>
-                <input type="text" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter student's Roll Number"
-                    name="username" autocomplete="off" required>
-            </div>
-            <div class="form-group">
-                <label for="mobile_number">Mobile Number</label>
-                <input type="text" class="form-control" id="mobile_number" placeholder="Enter mobile number" name="mobile_number" required>
-            </div>            
-            <div class="form-group">
-                <label for="CGPA">CGPA</label>
-                <input type="text" class="form-control" id="CGPA" placeholder="CGPA" name="cgpa" autocomplete="off"
-                    required>
-            </div>
-            <div class="form-group">
-                <label for="course_type">Course Type</label>
-                <div>
-                    <input type="radio" id="btech" name="course_type" value="B.Tech" required>
-                    <label for="btech">B.Tech</label>
-            
-                    <input type="radio" id="mtech" name="course_type" value="M.Tech" required>
-                    <label for="mtech">M.Tech</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="edu_mail">NITK EDU mail-ID</label>
+                        <input type="email" class="form-control" id="edu_mail" placeholder="Enter NITK Mail ID" name="edu_mail" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="email">Email address</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="fname">First Name</label>
+                        <input type="text" class="form-control" id="fname" placeholder="Enter First Name" name="fname" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="lname">Last Name</label>
+                        <input type="text" class="form-control" id="lname" placeholder="Enter Last Name" name="lname" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="username">Roll No</label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter Roll Number" name="username" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="mobile_number">Mobile Number</label>
+                        <input type="text" class="form-control" id="mobile_number" placeholder="Enter Mobile Number" name="mobile_number" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="cgpa">CGPA</label>
+                        <input type="text" class="form-control" id="cgpa" placeholder="Enter CGPA" name="cgpa" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="course_type">Course Type</label>
+                        <select class="form-control" id="course_type" name="course_type" required>
+                            <option value="B.Tech">B.Tech</option>
+                            <option value="M.Tech">M.Tech</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="branch">Branch</label>
-                <input type="text" class="form-control" id="branch" placeholder="Branch" name="branch" required>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="branch">Branch</label>
+                        <input type="text" class="form-control" id="branch" placeholder="Enter Branch" name="branch" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="aca_year">Academic Year</label>
+                        <input type="text" class="form-control" id="aca_year" placeholder="Enter Academic Year" name="aca_year" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="has_backlog">Has Backlog</label>
+                        <select class="form-control" id="has_backlog" name="has_backlog">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3" id="internship_field" style="display: none;">
+                        <label for="has_internship">Has Internship</label>
+                        <select class="form-control" id="has_internship" name="has_internship">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="aca_year">Academic Year</label>
-                <input type="text" class="form-control" id="aca_year" placeholder="Academic Year" name="aca_year"
-                    required>
-            </div>
-            <div class="form-group">
-                <label for="has_backlog">Has Backlog</label>
-                <select class="form-control" id="has_backlog" name="has_backlog">
-                    <option value="false" selected>No</option>
-                    <option value="true">Yes</option>
-                </select>
-            </div>
-            <div class="form-group" id="internship_field" style="display: none;">
-                <label for="has_internship">Has Internship</label>
-                <select class="form-control" id="has_internship" name="has_internship">
-                    <option value="false" selected>No</option>
-                    <option value="true">Yes</option>
-                </select>
-            </div>        
-            <button type="submit" class="btn btn-primary">Add Student</button>
         </form>
-        <form action="{% url 'add_student' %}" method="post" enctype="multipart/form-data" class="reg-userform-form">
+        <hr>
+        <h5 class="text-center mt-4">Or Upload a CSV File</h5>
+        <form action="{% url 'add_student' %}" method="post" enctype="multipart/form-data" class="mt-3">
             {% csrf_token %}
-            
             <div class="form-group">
                 <label for="csv_file">Upload CSV File</label>
                 <input type="file" class="form-control" id="csv_file" name="csv_file" accept=".csv">
             </div>
-        
-            <button type="submit" class="btn btn-primary">Upload & Add Students</button>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary">Upload & Add Students</button>
+            </div>
         </form>
     </div>
 </div>
 <script>
-    window.addEventListener("DOMContentLoaded", (event) => {
-            const courseTypeRadios = document.getElementsByName("course_type");
-            const internshipField = document.getElementById("internship_field");
+    document.addEventListener("DOMContentLoaded", function () {
+        const courseTypeSelect = document.getElementById("course_type");
+        const internshipField = document.getElementById("internship_field");
 
-            courseTypeRadios.forEach(radio => {
-                radio.addEventListener("change", function () {
-                    if (this.value === "M.Tech") {
-                        internshipField.style.display = "block";
-                    } else {
-                        internshipField.style.display = "none";
-                    }
-                });
-            });
+        courseTypeSelect.addEventListener("change", function () {
+            internshipField.style.display = this.value === "M.Tech" ? "block" : "none";
         });
+    });
 </script>
-<style>
-    .reg-userform {
-        /* background: white; */
-        padding: 3%;
-        max-width: 1100px;
-        margin: auto;
-        border-radius: 1;
-        filter: none;
-    }
-
-    .reg-userform>h1 {
-        font-weight: bolder;
-        letter-spacing: 1.5px;
-        border-bottom: solid;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .reg-userform>h5 {
-        font-weight: bolder;
-        margin-left: 2%;
-    }
-
-    .reg-userform-form {
-        max-width: 600px;
-        margin-left: 2%;
-        margin-top: 2rem;
-    }
-
-    p {
-        margin-left: 3%;
-        margin-top: 1rem;
-    }
-</style>
-
 {% endblock %}
