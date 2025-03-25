@@ -319,7 +319,7 @@ def generate_admin_pdf(request, id):
             continue
         student_name = allocation.student.user.get_full_name()
         student_email = allocation.student.user.edu_email  
-        allocated_faculty = allocation.current_allocation.user.username 
+        allocated_faculty = allocation.current_allocation.abbreviation 
         data.append([student_name, student_email, allocated_faculty])
 
     # Define table

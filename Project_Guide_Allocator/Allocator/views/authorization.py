@@ -314,6 +314,7 @@ def forgot_password_otp(request) :
                 if user.first_name:
                     recv_name = user.first_name
                 send_mail_page(user.edu_email, 'Password Reset Confirmed', f"Dear {recv_name},\nYour password has been reset. Kindly login again to set a new password.\nThank you.\nProject Guide Allocator Team.")
+                messages.error(request, f"Your password has been reset, kindly relogin to create a new passwod.")
                 return HttpResponseRedirect(reverse('home'))
             else:
                 logger.exception(f"IP: {request.META.get('REMOTE_ADDR')} failed to login")

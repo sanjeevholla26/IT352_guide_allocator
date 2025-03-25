@@ -5,96 +5,197 @@
 <head>
     {% load static %}
     <link rel="icon" type="image/png" href="{% static 'ultimateFavicon.png' %}">
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}"> -->
     {% block head %}{% endblock %}
-    <title>{% block title %} {% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS and JS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
     <style>
-        .css-selector {
-            background: linear-gradient(48deg, #43d0ac, #e468da);
-            background-size: 400% 400%;
-
-            -webkit-animation: AnimationName 30s ease infinite;
-            -moz-animation: AnimationName 30s ease infinite;
-            animation: AnimationName 30s ease infinite;
+        body {
+            background-color: #ffffff;
+            color: #253b50;
+            font-family: 'Arial', sans-serif;
         }
 
-        @-webkit-keyframes AnimationName {
-            0%{background-position:0% 50%}
-            50%{background-position:100% 50%}
-            100%{background-position:0% 50%}
-        }
-        @-moz-keyframes AnimationName {
-            0%{background-position:0% 50%}
-            50%{background-position:100% 50%}
-            100%{background-position:0% 50%}
-        }
-        @keyframes AnimationName {
-            0%{background-position:0% 50%}
-            50%{background-position:100% 50%}
-            100%{background-position:0% 50%}
+        .navbar {
+            background-color: #253b50;
+            padding: 15px 20px;
         }
 
-        .glass{
-            background: rgba( 255, 255, 255, 0.8 );
-            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-            backdrop-filter: blur( 2px );
-            -webkit-backdrop-filter: blur( 2px );
-            border-radius: 10px;
-            border: 1px solid rgba( 255, 255, 255, 0.18 );
+        .navbar .nav-link,
+        .navbar-brand {
+            color: #ffffff !important;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .navbar .nav-link:hover {
+            color: #f8f9fa !important;
+            text-decoration: underline;
+        }
+
+        .navbar-toggler {
+            border: none;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+
+        .btn-primary {
+            background-color: #253b50;
+            border-color: #253b50;
+        }
+
+        .btn-primary:hover {
+            background-color: #1e2f42;
+            border-color: #1e2f42;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .alert-danger {
+            background-color: #e57373;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .navbar-brand span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            margin-left: 10px;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: transparent;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.55rem;
+            vertical-align: top;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .table tbody+tbody {
+            border-top: 2px solid #e9ecef;
+        }
+
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 0.25rem;
+        }
+
+        .navbar .nav-link {
+            color: #ffffff !important;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+        }
+
+        .navbar .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: #f8f9fa;
+            transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+        }
+
+        .navbar .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .navbar .nav-link:hover {
+            color: #f8f9fa !important;
+            text-decoration: none;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .header-box {
+            border: solid #253b50;
+            font-size: 36.2px;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 
-<!-- <body style="background-color: rgb(237, 237, 237);"> -->
-<body style="background-color: rgb(237, 237, 237);" class="css-selector">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="margin-bottom: 40px;">
-        <!-- <a  href="{% url 'home' %}" class="btn btn-info btn-lg">
-            <span class="glyphicon glyphicon-home"></span> Home
-        </a> -->
-        <a href="{% url 'home' %}" class="btn btn-primary d-flex align-items-center">
-            <i class="fas fa-home mr-2"></i> Home
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+            <img src="{% static 'ultimateFavicon.png' %}" alt="PGA Logo" width="40" height="40">
+            <span class="ms-2">PGA</span>
+        </a>
+        <!-- NITK Logo (Visible only on small screens) -->
+        <a class="nav-link d-lg-none ms-auto" href="https://www.nitk.ac.in/">
+            <img src="{% static 'nitkLogo.svg' %}" width="30" height="30">
         </a>
 
-        <!-- <a class="navbar-brand" href="{% url 'home' %}">Home</a> -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <i class="fas fa-bars" style="color: white;"></i>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
                 {% if request.user|has_permission:'all_student,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'all_student' %}">Students</a></li>
                 {% endif %}
-                <!-- {% if request.user|has_permission:'add_student,Allocator' %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'add_student' %}">Add a new Student</a></li>
-                {% endif %} -->
                 {% if request.user|has_permission:'all_faculty,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'all_faculty' %}">Faculties</a></li>
                 {% endif %}
-                <!-- {% if request.user|has_permission:'add_faculty,Allocator' %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'add_faculty' %}">Add a new Faculty</a></li>
+                <!-- {% if request.user|has_permission:'all_events,Allocator' %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'events' %}">Events</a></li>
                 {% endif %} -->
                 {% if request.user|has_permission:'add_event,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'add_event' %}">Generate a New event</a></li>
                 {% endif %}
                 {% if request.user|has_permission:'all_events,Allocator' %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'events' %}">Allocation Preference form</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'events' %}">Allocation Preference Form</a></li>
                 {% endif %}
                 {% if request.user|has_permission:'admin_all_events,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'admin_all_events' %}">All events</a></li>
@@ -112,25 +213,49 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'add_permissions' %}">Add a new Permission</a></li>
                 {% endif %}
             </ul>
-            <a class="nav-link" href="https://www.nitk.ac.in/">
-                <img src="{% static 'nitkLogo.svg' %}" width="30em" height="30em"></img>
+
+            <!-- NITK Logo (Visible only on large screens) -->
+            <a class="nav-link d-none d-lg-block me-2" href="https://www.nitk.ac.in/">
+                <img src="{% static 'nitkLogo.svg' %}" width="30" height="30">
             </a>
-            <a class="nav-link" href="{% url 'logout' %}">
+
+            <a class="nav-link btn btn-primary text-white ms-2" href="{% url 'logout' %}">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
         </div>
     </nav>
-    {% if messages %}
-    <div class="alert alert-danger" role="alert">
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
+
+    <div class="container">
+        {% if messages %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <div class="header-container">
+            <div class="header-box">
+                Project Guide Allocator
+            </div>
+        </div>
+        {% block body %}{% endblock %}
     </div>
-    {% endif %}
-    {% block body %}
-    {% endblock %}
-</body>
+    <footer
+        style="text-align: right; padding: 10px; background-color: #1e2f42; color: #ffffff; position: fixed; bottom: 0; width: 100%;">
+        IT Department@NITK Surathkal
+    </footer>
+
+
+    <!-- jQuery (Make sure this is the first script) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
 </html>
