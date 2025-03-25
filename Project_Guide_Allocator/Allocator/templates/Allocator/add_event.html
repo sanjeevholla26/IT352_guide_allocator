@@ -1,99 +1,77 @@
 {% extends './home_layout.html' %}
 {% load static %}
-{% block head %}
-<meta charset="UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-{% endblock %}
 
 {% block title %} Add Event {% endblock %}
 
 {% block body %}
-<div class="reg-container">
-    <div class="glass reg-userform">
-        <h1>Project Guide Allocator</h1>
-        <h5>Add Event Here</h5>
-        <form action="{% url 'add_event' %}" method="post" class="reg-userform-form">
+<div class="card shadow-lg mb-5"> <!-- Added margin-bottom to prevent footer overlap -->
+    <div class="card-header p-4 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fs-4">
+            <i class="bi bi-calendar-plus me-2"></i> Add New Event
+        </h5>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+    <div class="card-body">
+        <form action="{% url 'add_event' %}" method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="name">Event Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Enter event name" required>
-            </div>
-            <div class="form-grsoup">
-                <label for="start_datetime">Start DateTime</label>
-                <input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime" required>
-            </div>
-            <div class="form-group">
-                <label for="end_datetime">End DateTime</label>
-                <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime" required>
-            </div>
-            <div class="form-group">
-                <label for="batch">Eligible Batch</label>
-                <input type="text" class="form-control" id="batch" name="batch" placeholder="Enter eligible batch"
-                    required>
-            </div>
-            <div class="form-group">
-                <label for="branch">Eligible Branch</label>
-                <input type="text" class="form-control" id="branch" name="branch" placeholder="Enter eligible branch"
-                    required>
-            </div>
-            <div class="form-group">
-                <label for="project_type">Project Type</label>
-                <div>
-                    <input type="radio" id="btech" name="project_type" value="B.Tech" required>
-                    <label for="btech">B.Tech</label>
-            
-                    <input type="radio" id="mtechmaj" name="project_type" value="M.Tech Major" required>
-                    <label for="mtech">M.Tech Major</label>
-                    
-                    <input type="radio" id="mtechmin" name="project_type" value="M.Tech Minor" required>
-                    <label for="mtech">M.Tech Minor</label>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="name" class="form-label">Event Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter event name" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="batch" class="form-label">Eligible Batch</label>
+                    <input type="text" class="form-control" id="batch" name="batch" placeholder="Enter eligible batch" required>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="faculties">Select Eligible Faculties</label>
-                <select id="faculties" class="form-control" name="faculties" multiple required>
-                    {% for faculty in faculties %}
-                    <option value="{{faculty.user.id}}">{{ faculty.user }}</option>
-                    {% endfor %}
-                </select>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="start_datetime" class="form-label">Start Date & Time</label>
+                    <input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="end_datetime" class="form-label">End Date & Time</label>
+                    <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime" required>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Add Event</button>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="branch" class="form-label">Eligible Branch</label>
+                    <input type="text" class="form-control" id="branch" name="branch" placeholder="Enter eligible branch" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="faculties" class="form-label">Select Eligible Faculties</label>
+                    <select id="faculties" class="form-select" name="faculties" multiple required>
+                        {% for faculty in faculties %}
+                        <option value="{{ faculty.user.id }}">{{ faculty.user }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Project Type</label>
+                <div class="d-flex gap-3">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="btech" name="project_type" value="B.Tech" required>
+                        <label class="form-check-label" for="btech">B.Tech</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="mtechmaj" name="project_type" value="M.Tech Major" required>
+                        <label class="form-check-label" for="mtechmaj">M.Tech Major</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="mtechmin" name="project_type" value="M.Tech Minor" required>
+                        <label class="form-check-label" for="mtechmin">M.Tech Minor</label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3"><i class="bi bi-plus-circle"></i> Add Event</button>
         </form>
     </div>
 </div>
 
-<style>
-    .reg-userform {
-        /* background: white; */
-        padding: 3%;
-        max-width: 1100px;
-        margin: auto;
-        border-radius: 1;
-        filter: none;
-    }
-
-    .reg-userform>h1 {
-        font-weight: bolder;
-        letter-spacing: 1.5px;
-        border-bottom: solid;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .reg-userform>h5 {
-        font-weight: bolder;
-        margin-left: 2%;
-    }
-
-    .reg-userform-form {
-        max-width: 600px;
-        margin-left: 2%;
-        margin-top: 2rem;
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-</style>
+<!-- Bootstrap Icons CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 {% endblock %}

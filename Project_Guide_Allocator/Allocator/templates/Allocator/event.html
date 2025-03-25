@@ -1,181 +1,124 @@
 {% extends './home_layout.html' %}
 {% load static %}
-{% block head %}
-<meta charset="UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-{% endblock %}
+
 {% block title %} Preference Filling {% endblock %}
 
 {% block body %}
-<div class="reg-userform">
-    <h1>Project Guide Choice filling</h1>
-    <h1>{{ event }}</h1>
-    {% if event.status == 'open' %}
-    <form method="POST" action="{% url 'create_or_edit_choicelist' id=event.id %}">
-        {% csrf_token %}
-        <input type="hidden" name="event_id" value="{{ event.id }}">
-        <input type="hidden" name="action" id="action-input" value="">
-        <div class="choice-form">
-            <h3>Select Your Preferences</h3>
-            {% for i in preference_range %}
-            <div class="edit-preference">
-                <div class="preference">
-                    <label for="faculty_{{ i }}">Preference {{ i }}</label>
-                    <select class="form-control faculty-select" name="faculty_{{ i }}" id="faculty_{{ i }}" required>
-                        <option value="">Select Faculty</option>
-                        {% for faculty in event.eligible_faculties.all %}
-                        <option value="{{ faculty.user.id }}">{{ faculty.abbreviation }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <button type="button" class="btn btn-danger remove-preference" id="remove-preference" data-id="{{ i }}"
-                    style="margin-left: 10px;">Remove</button>
-            </div>
-            {% endfor %}
-
-            <!-- Submit and Lock Choices Buttons -->
-            <button type="button" class="btn btn-primary submit-choice" onclick="submitForm('submit')">Save
-                Preferences</button>
+<div class="container mt-4">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white p-4 d-flex justify-content-between align-items-center rounded-top">
+            <h5 class="mb-0 fs-4">
+                <i class="bi bi-list-check me-2"></i> Project Guide Choice Filling
+            </h5>
+            <a href="javascript:history.back()" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
         </div>
-        {% endif %}
-        <div style="margin-top: 30px;">
-            <h3>Filled choices</h3>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Preference Number</th>
-                        <th scope="col">Abbreviation of Faculty</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for pref_no, fac in filled_preference.items %}
-                    {% if filled_choice.current_allocation.abbreviation == fac.abbreviation %}
-                    <tr class="bg-success">
-                        {% else %}
-                    <tr>
-                        {% endif %}
-                        <th scope="row" style="width: 3rem;">{{ forloop.counter }}</th>
-                        <td style="font-weight: bolder; letter-spacing: 1.5px;"><strong>{{ pref_no }}</strong></td>
-                        <td>{{ fac.abbreviation }}</td>
-                    </tr>
+        <div class="card-body bg-light p-4 rounded-bottom">
+            <h3 class="text-center text-dark">{{ event }}</h3>
+
+            {% if event.status == 'open' %}
+            <form method="POST" action="{% url 'create_or_edit_choicelist' id=event.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="event_id" value="{{ event.id }}">
+                <input type="hidden" name="action" id="action-input" value="">
+
+                <div class="mb-4">
+                    <h4 class="mb-3 text-secondary">Select Your Preferences</h4>
+                    {% for i in preference_range %}
+                    <div class="d-flex align-items-center mb-3">
+                        <label for="faculty_{{ i }}" class="fw-bold me-3">Preference {{ i }}:</label>
+                        <select class="form-select w-50 faculty-select" name="faculty_{{ i }}" id="faculty_{{ i }}" required>
+                            <option value="">Select Faculty</option>
+                            {% for faculty in event.eligible_faculties.all %}
+                            <option value="{{ faculty.user.id }}">{{ faculty.abbreviation }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="button" class="btn btn-danger btn-sm ms-3 remove-preference" data-id="{{ i }}">
+                            <i class="bi bi-x-circle"></i> Remove
+                        </button>
+                    </div>
                     {% endfor %}
-                </tbody>
-            </table>
-            {% if event.status == 'open' and not locked and filled_preference|length > 0 %}
-            <button type="button" class="btn btn-success lock-choice" onclick="submitForm('lock')">Lock Choices</button>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="submitForm('submit')">
+                    <i class="bi bi-save"></i> Save Preferences
+                </button>
+            </form>
             {% endif %}
-    </form>
+
+            <div class="mt-5">
+                <h4 class="text-secondary">Filled Choices</h4>
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Preference Number</th>
+                            <th>Abbreviation of Faculty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pref_no, fac in filled_preference.items %}
+                        <tr class="{% if filled_choice.current_allocation.abbreviation == fac.abbreviation %}table-success{% endif %}">
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td class="fw-bold">{{ pref_no }}</td>
+                            <td class="fw-bold text-primary">{{ fac.abbreviation }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                {% if event.status == 'open' and not locked and filled_preference|length > 0 %}
+                <button type="button" class="btn btn-success mt-3" onclick="submitForm('lock')">
+                    <i class="bi bi-lock"></i> Lock Choices
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
-</div>
 
-<style>
-    .reg-userform {
-        background: white;
-        padding: 3%;
-        max-width: 1100px;
-        margin: auto;
-        border-radius: 0;
-        filter: none;
-    }
-
-    .reg-userform>h1 {
-        font-weight: bolder;
-        letter-spacing: 1.5px;
-        border-bottom: solid;
-        padding: 1rem;
-    }
-
-    .reg-userform>h5 {
-        font-weight: bolder;
-        margin-left: 2%;
-    }
-
-    .reg-userform-form {
-        max-width: 600px;
-        margin-left: 2%;
-        margin-top: 2rem;
-    }
-
-    p {
-        margin-left: 3%;
-        margin-top: 1rem;
-    }
-
-    .edit-preference {
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-        width: 100%;
-    }
-
-    .preference {
-        width: 100%;
-    }
-
-    .choice-form {
-        display: flex;
-        flex-direction: column;
-        gap: 2em;
-    }
-
-    .submit-choice {
-        width: fit-content;
-    }
-</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
 <script>
-    // Hide already selected faculties for each dropdown
     function updateFacultyOptions() {
         const facultySelects = document.querySelectorAll('.faculty-select');
         const selectedValues = new Set();
 
-        // Collect all selected faculty values
         facultySelects.forEach(select => {
             if (select.value) {
                 selectedValues.add(select.value);
             }
         });
 
-        // Hide already selected options in other select dropdowns
         facultySelects.forEach(select => {
             const options = select.querySelectorAll('option');
             options.forEach(option => {
                 if (selectedValues.has(option.value) && option.value !== select.value) {
-                    option.style.display = 'none'; // Hide the option
+                    option.style.display = 'none';
                 } else {
-                    option.style.display = 'block'; // Show the option
+                    option.style.display = 'block';
                 }
             });
         });
     }
 
-    // Initial call to set the correct options
     document.addEventListener('change', updateFacultyOptions);
 
-    // Add remove button functionality
     document.querySelectorAll('.remove-preference').forEach(button => {
         button.addEventListener('click', function () {
-            // Get the preference number from data-id attribute
             const preferenceId = this.dataset.id;
-
-            // Clear the corresponding select field
             const facultySelect = document.getElementById(`faculty_${preferenceId}`);
             if (facultySelect) {
-                facultySelect.value = ''; // Clear the selection
+                facultySelect.value = '';
             }
-
-            // Call the function to update options
             updateFacultyOptions();
         });
     });
 
-    // Function to handle form submission based on button click
     function submitForm(actionType) {
         document.getElementById('action-input').value = actionType;
         document.querySelector('form').submit();
     }
-
 </script>
 {% endblock %}
