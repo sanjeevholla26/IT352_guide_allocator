@@ -1,4 +1,22 @@
 /* Consolidated CSS for Login Pages */
+@media (max-width: 768px) { /* Adjust breakpoint as needed */
+  .image-container {
+      display: none; /* Hides the image */
+  }
+
+  .reg-userform {
+    width: 100% !important; /* Expand the container */
+    max-width: 500px; /* Prevent it from being too wide */
+    padding: 2rem; /* Add spacing */
+  }
+  .form-container {
+      width: 100% !important; /* Makes form take full width */
+      padding: 1rem !important; /* Adjust padding for better spacing */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+  }
+}
 
 :root {
   --primary-color: #2c3e50;
@@ -130,7 +148,7 @@ button:hover {
 .header-title {
     display: flex;
     align-items: center;
-    background-color: navy;
+    background-color: #253b50;
     color:white;
     padding: 1rem 2rem;
     border-radius: 10px;
