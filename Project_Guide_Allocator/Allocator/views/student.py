@@ -101,7 +101,7 @@ def add_student(request):
                         added_students += 1
 
                 except IntegrityError:
-                    messages.error(request, f"Roll number {username} already exists.")
+                    messages.error(request, f" {username} already exists.")
                     continue
 
             messages.success(request, f"{added_students} students added successfully!")
@@ -168,7 +168,7 @@ def add_student(request):
                 student_role.save()
 
         except IntegrityError:
-            messages.error(request, "Roll number already exists.")
+            messages.error(request, "User already exists.")
             return HttpResponseRedirect(reverse('add_student'))
 
         except Exception as e:

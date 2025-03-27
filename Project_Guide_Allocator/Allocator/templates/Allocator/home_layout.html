@@ -209,9 +209,9 @@
                 {% if request.user|has_permission:'eligible_events,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'eligible_events' %}">Faculty Dashboard</a></li>
                 {% endif %}
-                {% if request.user|has_permission:'add_permissions,Allocator' %}
+                <!-- {% if request.user|has_permission:'add_permissions,Allocator' %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'add_permissions' %}">Add a new Permission</a></li>
-                {% endif %}
+                {% endif %} -->
             </ul>
 
             <!-- NITK Logo (Visible only on large screens) -->
