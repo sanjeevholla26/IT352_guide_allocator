@@ -36,9 +36,10 @@
         <p>Welcome to <strong>PGA</strong><i> (Project Guide Allocator)</i>, a system developed as part of the
             Information Assurance and Security [IT352] course under the esteemed guidance of <a
                 href="http://infotech.nitk.ac.in/faculty/jaidhar-c-d">Prof. Jaidhar C. D</a>.
-            PGA is built with the aim of streamlining the process of project guide allocation, to ensure a fair and efficient
+            PGA is built with the aim of streamlining the process of project guide allocation, to ensure a fair and
+            efficient
             allocation of mentors for students.</p>
-<p>
+        <p>
             This project was developed by:
 
         <ul>
@@ -47,8 +48,9 @@
             <li>221IT059 - Sanjeev Holla S</li>
             <li>221IT068 - Sudeep Y M</li>
         </ul>
-        </p><p>
-        We hope PGA will be extremely useful for both students and faculty alike.</p>
+        </p>
+        <p>
+            We hope PGA will be extremely useful for both students and faculty alike.</p>
     </div>
 </div>
 
@@ -85,6 +87,15 @@
         margin-bottom: 15px;
     }
 
+    .btn-primary {
+        cursor: pointer;
+        transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+    }
+
     .id-card h2 {
         font-size: 26px;
         font-weight: bold;
@@ -108,6 +119,11 @@
         padding: 20px;
         width: 600px;
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .message-box:hover {
+        transform: scale(1.03);
     }
 
     .message-box h3 {
