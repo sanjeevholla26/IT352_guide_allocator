@@ -40,7 +40,7 @@ def send_sms(mobile_number, otp, recv_name):
     twilio_phone_number = settings.TWILIO_PHONE_NUMBER
 
     client = Client(account_sid, auth_token)
-    
+
     message = client.messages.create(
         body=f"Dear {recv_name},\nYour Login OTP (One Time Password) is {otp}. Kindly use this OTP to login.\nThank you.\nB.Tech Major Project Team.",
         from_=twilio_phone_number,
@@ -141,7 +141,7 @@ def login_view(request):
                                 "edu_email": edu_email
                             })
                         else:
-                            return send_to_otp(request, user, next_url)                    
+                            return send_to_otp(request, user, next_url)
             except CaptchaStore.DoesNotExist:
                 messages.error(request, "Captcha validation error. Please try again.")
                 return HttpResponseRedirect(reverse(login_view))
@@ -149,7 +149,7 @@ def login_view(request):
             return render(request, "Allocator/login.html")
     else:
         return HttpResponseRedirect(reverse('home'))
-    
+
 
 def otp(request) :
     if not request.user.is_authenticated:
@@ -198,7 +198,7 @@ def password_creation(request):
     user = MyUser.objects.get(edu_email=edu_email)
     if not user:
         messages.error(request, "Invalid user.")
-        return HttpResponseRedirect(reverse(login_view))                
+        return HttpResponseRedirect(reverse(login_view))
     if is_user_blocked(user):
         messages.error(request, f"User is blocked. Wait till {user.failed_blocked} to login.")
         return HttpResponseRedirect(reverse(login_view))
@@ -222,18 +222,18 @@ def password_creation(request):
         authenticate(request, edu_email=edu_email, password=password)
         login(request, user)
         logged_in(user)
-        messages.error(request, "New Password created successfully.")
+        messages.success(request, "New Password created successfully.")
         return HttpResponseRedirect(next_url if next_url else reverse('home'))
     else:
         return render(request, "Allocator/login_create_password.html", {
             "message" : "Invalid password format. Kindly read the rules and try again.",
             "next": next_url,
             "edu_email": edu_email
-        })  
+        })
 
 def create_password(request) :
     if not request.user.is_authenticated:
-        if request.method == "POST" : 
+        if request.method == "POST" :
             return password_creation(request)
         else :
             return HttpResponseRedirect(reverse(login_view))
@@ -314,7 +314,7 @@ def forgot_password_otp(request) :
                 if user.first_name:
                     recv_name = user.first_name
                 send_mail_page(user.edu_email, 'Password Reset Confirmed', f"Dear {recv_name},\nYour password has been reset. Kindly login again to set a new password.\nThank you.\nProject Guide Allocator Team.")
-                messages.error(request, f"Your password has been reset, kindly relogin to create a new passwod.")
+                messages.success(request, f"Your password has been reset, kindly relogin to create a new passwod.")
                 return HttpResponseRedirect(reverse('home'))
             else:
                 logger.exception(f"IP: {request.META.get('REMOTE_ADDR')} failed to login")
