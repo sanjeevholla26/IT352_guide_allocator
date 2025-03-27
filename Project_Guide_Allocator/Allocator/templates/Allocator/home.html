@@ -14,35 +14,41 @@
     <div class="id-card">
         <div class="profile-pic">
             <img src="https://ui-avatars.com/api/?name={{ request.user.first_name }}+{{ request.user.last_name }}&background=random&size=100"
-                 alt="User Avatar">
+                alt="User Avatar">
         </div>
         <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
         <p class="email">{{ request.user.edu_email }}</p>
         {% if student %}
-            <p><strong>Roll Number:</strong> {{ request.user.username }}</p>
-            <p><strong>Course Type:</strong> {{ student.course_type }}</p>
-            <p><strong>Branch & Batch:</strong> {{ student.branch }} - {{ student.academic_year }}</p>
+        <p><strong>Roll Number:</strong> {{ request.user.username }}</p>
+        <p><strong>Course Type:</strong> {{ student.course_type }}</p>
+        <p><strong>Branch & Batch:</strong> {{ student.branch }} - {{ student.academic_year }}</p>
         {% endif %}
         {% if faculty %}
-            <p><strong>Abbreviation:</strong> {{ request.user.username }}</p>
+        <p><strong>Abbreviation:</strong> {{ request.user.username }}</p>
         {% endif %}
         <a href="{% url 'change_password' %}">
             <button class="btn btn-primary">Change Password</button>
         </a>
     </div>
 
-    <!-- Instructions & Messages -->
     <div class="message-box">
-        <h3>Instructions</h3>
-        <ul>
-            <li>Please complete your profile details.</li>
-            <li>Check your allocated project guide in the system.</li>
-            <li>Contact your guide if you have any queries.</li>
-        </ul>
+        <h3>Introduction</h3>
+        <p>Welcome to <strong>PGA</strong><i> (Project Guide Allocator)</i>, a system developed as part of the
+            Information Assurance and Security [IT352] course under the esteemed guidance of <a
+                href="http://infotech.nitk.ac.in/faculty/jaidhar-c-d">Prof. Jaidhar C. D</a>.
+            PGA is built with the aim of streamlining the process of project guide allocation, to ensure a fair and efficient
+            allocation of mentors for students.</p>
+<p>
+            This project was developed by:
 
-        <h3>Important Messages</h3>
-        <p>Project submission deadline: <strong>15th April 2025</strong></p>
-        <p>Next meeting with faculty: <strong>5th March 2025</strong></p>
+        <ul>
+            <li>221IT001 - Abhay Aniruddha</li>
+            <li>221IT045 - Nandan Ramesh</li>
+            <li>221IT059 - Sanjeev Holla S</li>
+            <li>221IT068 - Sudeep Y M</li>
+        </ul>
+        </p><p>
+        We hope PGA will be extremely useful for both students and faculty alike.</p>
     </div>
 </div>
 
@@ -54,7 +60,8 @@
         align-items: flex-start;
         gap: 30px;
         margin-top: 30px;
-        flex-wrap: wrap; /* Ensures wrapping for smaller screens */
+        flex-wrap: wrap;
+        /* Ensures wrapping for smaller screens */
     }
 
     /* ID Card */
@@ -127,20 +134,23 @@
     /* Responsive Design */
     @media screen and (max-width: 767px) {
         .dashboard-container {
-            flex-direction: column; /* Stack elements vertically */
-            align-items: center; /* Center items */
+            flex-direction: column;
+            /* Stack elements vertically */
+            align-items: center;
+            /* Center items */
         }
 
         .id-card {
-            width: 90%; /* Adjust width for smaller screens */
+            width: 90%;
+            /* Adjust width for smaller screens */
             padding: 20px;
         }
 
         .message-box {
-            width: 90%; /* Adjust width for smaller screens */
+            width: 90%;
+            /* Adjust width for smaller screens */
             padding: 20px;
         }
     }
-
 </style>
 {% endblock %}
