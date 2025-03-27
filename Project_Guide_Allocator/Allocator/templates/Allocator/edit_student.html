@@ -1,107 +1,123 @@
 {% extends './home_layout.html' %}
 {% load static %}
 
-{% block title %}Edit Student{% endblock %}
+{% block title %} Edit Student {% endblock %}
 
 {% block body %}
-<div class="reg-container">
-    <div class="reg-userform glass">
-        <h1>Project Guide Allocator</h1>
-        <h5>Edit Student</h5>
-        
-        <form method="POST">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label for="fname">First Name</label>
-                <input type="text" class="form-control" id="fname" name="fname" value="{{ student.user.first_name }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="lname">Last Name</label>
-                <input type="text" class="form-control" id="lname" name="lname" value="{{ student.user.last_name }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{ student.user.email }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="mobile_number">Mobile Number</label>
-                <input type="text" class="form-control" id="mobile_number" name="mobile_number" value="{{ student.user.mobile_number }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="cgpa">CGPA</label>
-                <input type="number" step="0.01" class="form-control" id="cgpa" name="cgpa" value="{{ student.cgpa }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="branch">Branch</label>
-                <input type="text" class="form-control" id="branch" name="branch" value="{{ student.branch }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="academic_year">Academic Year</label>
-                <input type="text" class="form-control" id="academic_year" name="academic_year" value="{{ student.academic_year }}" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="has_backlog">Has Backlog</label>
-              <select class="form-control" id="has_backlog" name="has_backlog" required>
-                <option value="false" {% if not student.has_backlog %}selected{% endif %}>No</option>
-                <option value="true" {% if student.has_backlog %}selected{% endif %}>Yes</option>
-              </select>
-            </div>
-
-            <button type="submit" class="btn btn-success">Update</button>
-            <a href="{% url 'all_student' %}" class="btn btn-secondary">Cancel</a>
-        </form>
-    </div>
+<div class="card shadow-lg">
+  <div class="card-header p-4 d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fs-4">
+      <i class="bi bi-people-fill me-2"></i> Edit Student
+    </h5>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Back
+    </a>
+  </div>
+  <div class="card-body p-5">
+    <form id="editStudentForm" method="POST" onsubmit="return validateForm()">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label for="fname">First Name</label>
+            <input type="text" class="form-control" id="fname" name="fname" value="{{ student.user.first_name }}"
+              required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="lname">Last Name</label>
+            <input type="text" class="form-control" id="lname" name="lname" value="{{ student.user.last_name }}"
+              required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ student.user.email }}" required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="academic_year">Academic Year</label>
+            <select class="form-select" id="academic_year" name="academic_year" required></select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label for="mobile_number">Mobile Number</label>
+            <input type="text" class="form-control" id="mobile_number" name="mobile_number"
+              value="{{ student.user.mobile_number }}" required>
+            <small class="text-danger" id="mobileError" style="display: none;">Enter a valid 10-digit mobile
+              number</small>
+          </div>
+          <div class="form-group mb-3">
+            <label for="cgpa">CGPA</label>
+            <input type="number" step="0.01" class="form-control" id="cgpa" name="cgpa" value="{{ student.cgpa }}"
+              required>
+            <small class="text-danger" id="cgpaError" style="display: none;">CGPA must be between 0 and 10</small>
+          </div>
+          <div class="form-group mb-3">
+            <label for="branch">Branch</label>
+            <select class="form-select" id="branch" name="branch" required>
+              <option value="IT" {% if student.branch == 'IT' %}selected{% endif %}>IT</option>
+              <option value="AI" {% if student.branch == 'AI' %}selected{% endif %}>AI</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="has_backlog">Has Backlog</label>
+            <select class="form-select" id="has_backlog" name="has_backlog" required>
+              <option value="false" {% if not student.has_backlog %}selected{% endif %}>No</option>
+              <option value="true" {% if student.has_backlog %}selected{% endif %}>Yes</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary" style="width: 250px;">Update Student</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
 
+<script>
+  // Populate Academic Year dropdown (past 5 years to next 5 years)
+  document.addEventListener("DOMContentLoaded", function () {
+    const academicYearSelect = document.getElementById("academic_year");
+    const currentYear = new Date().getFullYear();
+    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      if ("{{ student.academic_year }}" == i) {
+        option.selected = true;
+      }
+      academicYearSelect.appendChild(option);
+    }
+  });
 
-<style>
-    .reg-userform {
-      padding: 3%;
-      max-width: 1100px;
-      margin: auto;
-      border-radius: 1;
-      filter: none;
+  // Validate form inputs before submission
+  function validateForm() {
+    let isValid = true;
+
+    // Validate Mobile Number (must be exactly 10 digits)
+    const mobileInput = document.getElementById("mobile_number");
+    const mobileError = document.getElementById("mobileError");
+    if (!/^\d{10}$/.test(mobileInput.value)) {
+      mobileError.style.display = "block";
+      isValid = false;
+    } else {
+      mobileError.style.display = "none";
     }
-  
-    .reg-userform > h1 {
-      font-weight: bolder;
-      letter-spacing: 1.5px;
-      border-bottom: solid;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
+
+    // Validate CGPA (must be between 0 and 10)
+    const cgpaInput = document.getElementById("cgpa");
+    const cgpaError = document.getElementById("cgpaError");
+    const cgpaValue = parseFloat(cgpaInput.value);
+    if (isNaN(cgpaValue) || cgpaValue < 0 || cgpaValue > 10) {
+      cgpaError.style.display = "block";
+      isValid = false;
+    } else {
+      cgpaError.style.display = "none";
     }
-  
-    .reg-userform > h5 {
-      font-weight: bolder;
-      margin-left: 2%;
-    }
-  
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-  
-    .table th, .table td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-  
-    .table th {
-      background-color: #f4f4f4;
-    }
-  
-    .btn {
-      margin: 5px;
-    }
-  </style>
+
+    return isValid;
+  }
+</script>
 {% endblock %}

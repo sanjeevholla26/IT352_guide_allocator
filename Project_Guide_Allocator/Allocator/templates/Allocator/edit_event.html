@@ -4,40 +4,50 @@
 {% block title %} Edit Event {% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <div class="card shadow-lg border-0 rounded-4">
-        <div class="card-header bg-primary text-white p-4 d-flex justify-content-between align-items-center rounded-top">
-            <h5 class="mb-0 fs-4">
-                <i class="bi bi-pencil-square me-2"></i> Edit Event
-            </h5>
-            <a href="javascript:history.back()" class="btn btn-light btn-sm">
-                <i class="bi bi-arrow-left"></i> Back
-            </a>
-        </div>
-        <div class="card-body bg-light p-4 rounded-bottom">
-            <form action="{% url 'edit_event' event.id %}" method="post">
-                {% csrf_token %}
-                <div class="mb-3">
+<div class="card shadow-lg mb-5">
+    <div class="card-header p-4 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fs-4">
+            <i class="bi bi-pencil-square me-2"></i> Edit Event
+        </h5>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+    <div class="card-body">
+        <form action="{% url 'edit_event' event.id %}" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-3">
                     <label for="name" class="form-label">Event Name</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ event.event_name }}" placeholder="Enter event name" required>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ event.event_name }}" required>
                 </div>
-                <div class="mb-3">
-                    <label for="start_datetime" class="form-label">Start DateTime</label>
-                    <input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime" value="{{ event.start_datetime|date:'Y-m-d\TH:i' }}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="end_datetime" class="form-label">End DateTime</label>
-                    <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime" value="{{ event.end_datetime|date:'Y-m-d\TH:i' }}" required>
-                </div>
-                <div class="mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="batch" class="form-label">Eligible Batch</label>
-                    <input type="text" class="form-control" id="batch" name="batch" value="{{ event.eligible_batch }}" placeholder="Enter eligible batch" required>
+                    <select class="form-select" id="batch" name="batch" required></select>
                 </div>
-                <div class="mb-3">
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="start_datetime" class="form-label">Start Date & Time</label>
+                    <input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime"
+                        value="{{ event.start_datetime|date:'Y-m-d\TH:i' }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="end_datetime" class="form-label">End Date & Time</label>
+                    <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime"
+                        value="{{ event.end_datetime|date:'Y-m-d\TH:i' }}" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
                     <label for="branch" class="form-label">Eligible Branch</label>
-                    <input type="text" class="form-control" id="branch" name="branch" value="{{ event.eligible_branch }}" placeholder="Enter eligible branch" required>
+                    <select class="form-select" id="branch" name="branch" required>
+                        <option value="IT" {% if event.eligible_branch == 'IT' %}selected{% endif %}>IT</option>
+                        <option value="AI" {% if event.eligible_branch == 'AI' %}selected{% endif %}>AI</option>
+                    </select>
                 </div>
-                <div class="mb-3">
+                <div class="col-md-6 mb-3">
+                    {{ event.faculties.all }}
                     <label for="faculties" class="form-label">Select Eligible Faculties</label>
                     <select id="faculties" class="form-select" name="faculties" multiple required>
                         {% for faculty in faculties %}
@@ -47,10 +57,37 @@
                         {% endfor %}
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary mb-5">Update Event</button>
-            </form>
-        </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3"><i class="bi bi-save"></i> Save Changes</button>
+        </form>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const batchSelect = document.getElementById("batch");
+        const currentYear = new Date().getFullYear();
+        for (let year = currentYear + 5; year >= currentYear - 5; year--) {
+            let option = new Option(year, year);
+            if (year == "{{ event.eligible_batch }}") {
+                option.selected = true;
+            }
+            batchSelect.appendChild(option);
+        }
+
+        const startDateTimeInput = document.getElementById("start_datetime");
+        const endDateTimeInput = document.getElementById("end_datetime");
+
+        function validateEndTime() {
+            if (new Date(endDateTimeInput.value) <= new Date(startDateTimeInput.value)) {
+                alert("End time must be after the start time.");
+                endDateTimeInput.value = "";
+            }
+        }
+
+        startDateTimeInput.addEventListener("change", validateEndTime);
+        endDateTimeInput.addEventListener("change", validateEndTime);
+    });
+</script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 {% endblock %}

@@ -1,103 +1,82 @@
 {% extends './home_layout.html' %}
 {% load static %}
+
 {% block title %} Edit Faculty {% endblock %}
 
 {% block body %}
-<div class="reg-container">
-  <div class="glass reg-userform">
-    <h1>Project Guide Allocator</h1>
-    <h5>Edit Faculty Details</h5>
-
-    {% if messages %}
-      <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-
-    <form action="{% url 'edit_faculty' faculty.user.id %}" method="post" class="reg-userform-form">
+<div class="card shadow-lg">
+  <div class="card-header p-4 d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fs-4">
+      <i class="bi bi-people-fill me-2"></i> Edit Faculty
+    </h5>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Back
+    </a>
+  </div>
+  <div class="card-body p-5">
+    <form action="{% url 'edit_faculty' faculty.user.id %}" method="post" onsubmit="return validateForm()">
       {% csrf_token %}
-      <div class="form-group">
-        <label for="edu_mail">NITK EDU Mail-ID</label>
-        <input type="email" class="form-control" id="edu_mail" name="edu_mail"
-          value="{{ faculty.user.edu_email }}" required />
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label for="email">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ faculty.user.email }}"
+              required />
+          </div>
+          <div class="form-group mb-3">
+            <label for="fname">First Name</label>
+            <input type="text" class="form-control" id="fname" name="fname" value="{{ faculty.user.first_name }}"
+              required />
+          </div>
+          <div class="form-group mb-3">
+            <label for="abbreviation">Abbreviation</label>
+            <input type="text" class="form-control" id="abbreviation" name="abbreviation" value="{{ faculty.abbreviation }}"
+              required />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label for="username">Employee ID</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{ faculty.user.username }}"
+            readonly />
+          </div>
+          <div class="form-group mb-3">
+            <label for="lname">Last Name</label>
+            <input type="text" class="form-control" id="lname" name="lname" value="{{ faculty.user.last_name }}"
+              required />
+          </div>
+          <div class="form-group mb-3">
+            <label for="mobile_number">Mobile Number</label>
+            <input type="text" class="form-control" id="mobile_number" name="mobile_number"
+              value="{{ faculty.user.mobile_number }}" required>
+            <small class="text-danger" id="mobileError" style="display: none;">Enter a valid 10-digit mobile
+              number</small>
+          </div>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" class="form-control" id="email" name="email"
-          value="{{ faculty.user.email }}" required />
+      <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary" style="width: 250px;">Update Faculty</button>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="fname">First Name</label>
-        <input type="text" class="form-control" id="fname" name="fname"
-          value="{{ faculty.user.first_name }}" required />
-      </div>
-
-      <div class="form-group">
-        <label for="lname">Last Name</label>
-        <input type="text" class="form-control" id="lname" name="lname"
-          value="{{ faculty.user.last_name }}" required />
-      </div>
-
-      <div class="form-group">
-        <label for="username">Employee ID</label>
-        <input type="text" class="form-control" id="username" name="username"
-          value="{{ faculty.user.username }}" readonly />
-      </div>
-
-      <div class="form-group">
-        <label for="mobile_number">Mobile Number</label>
-        <input type="text" class="form-control" id="mobile_number" name="mobile_number"
-          value="{{ faculty.user.mobile_number }}" required />
-      </div>
-
-      <div class="form-group">
-        <label for="abbreviation">Abbreviation</label>
-        <input type="text" class="form-control" id="abbreviation" name="abbreviation"
-          value="{{ faculty.abbreviation }}" required />
-      </div>
-
-      <button type="submit" class="btn btn-primary">Update Faculty</button>
-      <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
     </form>
   </div>
 </div>
 
-<style>
-  .reg-userform {
-    padding: 3%;
-    max-width: 1100px;
-    margin: auto;
-    border-radius: 1;
-    filter: none;
-  }
+<script>
+  function validateForm() {
+    let isValid = true;
 
-  .reg-userform > h1 {
-    font-weight: bolder;
-    letter-spacing: 1.5px;
-    border-bottom: solid;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-  }
+    const mobileInput = document.getElementById("mobile_number");
+    const mobileError = document.getElementById("mobileError");
+    if (!/^\d{10}$/.test(mobileInput.value)) {
+      mobileError.style.display = "block";
+      isValid = false;
+    } else {
+      mobileError.style.display = "none";
+    }
 
-  .reg-userform > h5 {
-    font-weight: bolder;
-    margin-left: 2%;
+    return isValid;
   }
-
-  .reg-userform-form {
-    max-width: 600px;
-    margin-left: 2%;
-    margin-top: 2rem;
-  }
-
-  p {
-    margin-left: 3%;
-    margin-top: 1rem;
-  }
-</style>
-
+</script>
 {% endblock %}
