@@ -22,19 +22,23 @@
             <label for="edu_mail">NITK EDU mail-ID</label>
             <input type="email" class="form-control" id="edu_mail" placeholder="Enter NITK Mail ID" name="edu_mail"
               required>
+              <span class="text-danger small"></span>
           </div>
           <div class="form-group mb-3">
             <label for="email">Email address</label>
             <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+            <span class="text-danger small"></span>
           </div>
           <div class="form-group mb-3">
             <label for="fname">First Name</label>
             <input type="text" class="form-control" id="fname" placeholder="Enter First Name" name="fname" required>
+            <span class="text-danger small"></span>
           </div>
           <div class="form-group mb-3">
             <label for="abbreviation">Abbreviation</label>
             <input type="text" class="form-control" id="abbreviation" placeholder="Enter faculty's abbreviation"
               name="abbreviation" required>
+              <span class="text-danger small"></span>
           </div>
         </div>
         <div class="col-md-6">
@@ -47,10 +51,12 @@
             <label for="mobile_number">Mobile Number</label>
             <input type="text" class="form-control" id="mobile_number" placeholder="Enter Mobile Number"
               name="mobile_number" required>
+              <span class="text-danger small"></span>
           </div>
           <div class="form-group mb-3">
             <label for="lname">Last Name</label>
             <input type="text" class="form-control" id="lname" placeholder="Enter Last Name" name="lname" required>
+            <span class="text-danger small"></span>
           </div>
         </div>
       </div>
@@ -74,4 +80,51 @@
     </form>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const abbreviationInput = document.getElementById("abbreviation");
+      const mobileInput = document.getElementById("mobile_number");
+      const eduMailInput = document.getElementById("edu_mail");
+      const fnameInput = document.getElementById("fname");
+      const lnameInput = document.getElementById("lname");
+
+      function validateInput(input, pattern, errorMsg) {
+          const errorSpan = input.nextElementSibling;
+          if (!pattern.test(input.value)) {
+              input.classList.add("is-invalid");
+              errorSpan.textContent = errorMsg;
+          } else {
+              input.classList.remove("is-invalid");
+              errorSpan.textContent = "";
+          }
+      }
+
+      // Abbreviation (3-5 uppercase letters)
+      abbreviationInput.addEventListener("input", function () {
+          validateInput(this, /^[A-Z]{3,5}$/, "Abbreviation must be 3 to 5 uppercase letters (e.g., CSE, MECH)");
+      });
+
+      // Mobile Number (10 digits)
+      mobileInput.addEventListener("input", function () {
+          validateInput(this, /^[0-9]{10}$/, "Mobile number must be exactly 10 digits.");
+      });
+
+      // NITK EDU Email
+      eduMailInput.addEventListener("input", function () {
+          validateInput(this, /^[a-zA-Z0-9._%+-]+@nitk\.edu\.in$/, "Email must end with @nitk.edu.in");
+      });
+
+      // First Name (Only letters)
+      fnameInput.addEventListener("input", function () {
+          validateInput(this, /^[A-Za-z]+$/, "First name should contain only letters.");
+      });
+
+      // Last Name (Only letters)
+      lnameInput.addEventListener("input", function () {
+          validateInput(this, /^[A-Za-z]+$/, "Last name should contain only letters.");
+      });
+
+  });
+</script>
+
 {% endblock %}

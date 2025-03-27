@@ -21,6 +21,7 @@
                     <div class="form-group mb-3">
                         <label for="edu_mail">NITK EDU mail-ID</label>
                         <input type="email" class="form-control" id="edu_mail" placeholder="Enter NITK Mail ID" name="edu_mail" required>
+                        <span class="text-danger small"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label for="email">Email address</label>
@@ -29,10 +30,12 @@
                     <div class="form-group mb-3">
                         <label for="fname">First Name</label>
                         <input type="text" class="form-control" id="fname" placeholder="Enter First Name" name="fname" required>
+                        <span class="text-danger small"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label for="lname">Last Name</label>
                         <input type="text" class="form-control" id="lname" placeholder="Enter Last Name" name="lname" required>
+                        <span class="text-danger small"></span>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -43,10 +46,12 @@
                     <div class="form-group mb-3">
                         <label for="mobile_number">Mobile Number</label>
                         <input type="text" class="form-control" id="mobile_number" placeholder="Enter Mobile Number" name="mobile_number" required>
+                        <span class="text-danger small"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label for="cgpa">CGPA</label>
                         <input type="text" class="form-control" id="cgpa" placeholder="Enter CGPA" name="cgpa" required>
+                        <span class="text-danger small"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label for="course_type">Course Type</label>
@@ -61,11 +66,17 @@
                 <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="branch">Branch</label>
-                        <input type="text" class="form-control" id="branch" placeholder="Enter Branch" name="branch" required>
+                        <select class="form-select" id="branch" name="branch" required>
+                            <option value="IT">IT</option>
+                            <option value="AI">AI</option>
+                        </select>
                     </div>
                     <div class="form-group mb-3">
                         <label for="aca_year">Academic Year</label>
-                        <input type="text" class="form-control" id="aca_year" placeholder="Enter Academic Year" name="aca_year" required>
+                        <select class="form-control" id="aca_year" name="aca_year" required>
+                            <!-- Options will be added dynamically -->
+                        </select>
+                        <span class="text-danger small"></span>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -107,12 +118,64 @@
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const fnameInput = document.getElementById("fname");
+        const lnameInput = document.getElementById("lname");
+        const eduMailInput = document.getElementById("edu_mail");
+        const mobileInput = document.getElementById("mobile_number");
+        const cgpaInput = document.getElementById("cgpa");
+        const acaYearSelect = document.getElementById("aca_year");
         const courseTypeSelect = document.getElementById("course_type");
         const internshipField = document.getElementById("internship_field");
 
+        function validateInput(input, pattern, errorMsg) {
+            const errorSpan = input.nextElementSibling;
+            if (!pattern.test(input.value)) {
+                input.classList.add("is-invalid");
+                errorSpan.textContent = errorMsg;
+            } else {
+                input.classList.remove("is-invalid");
+                errorSpan.textContent = "";
+            }
+        }
+
+        // First Name & Last Name (Only letters)
+        fnameInput.addEventListener("input", function () {
+            validateInput(this, /^[A-Za-z]+$/, "First name should contain only letters.");
+        });
+
+        lnameInput.addEventListener("input", function () {
+            validateInput(this, /^[A-Za-z]+$/, "Last name should contain only letters.");
+        });
+
+        // NITK Email
+        eduMailInput.addEventListener("input", function () {
+            validateInput(this, /^[a-zA-Z0-9._%+-]+@nitk\.edu\.in$/, "Email must end with @nitk.edu.in");
+        });
+
+        // Mobile Number (10 digits)
+        mobileInput.addEventListener("input", function () {
+            validateInput(this, /^[0-9]{10}$/, "Mobile number must be exactly 10 digits.");
+        });
+
+        // CGPA (1.0 to 10.0, allows decimals)
+        cgpaInput.addEventListener("input", function () {
+            validateInput(this, /^(10(\.0{1,2})?|[1-9](\.\d{1,2})?)$/, "CGPA must be between 1.0 and 10.0.");
+        });
+
+        // Academic Year (Must be the current year or earlier)
+        const currentYear = new Date().getFullYear();
+
+        // Populate academic year options (from currentYear-5 to currentYear+5)
+        for (let year = currentYear + 5; year >= currentYear - 5; year--) {
+            let option = new Option(year, year);
+            acaYearSelect.appendChild(option);
+        }
+
+        // Show Internship Field only for M.Tech
         courseTypeSelect.addEventListener("change", function () {
             internshipField.style.display = this.value === "M.Tech" ? "block" : "none";
         });
     });
 </script>
+
 {% endblock %}
