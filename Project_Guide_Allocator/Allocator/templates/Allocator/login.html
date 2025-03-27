@@ -1,166 +1,55 @@
-{% extends './login_layout.html' %}
-{% load static %}
-{% block head %}
+{% extends './login_layout.html' %} {% load static %} {% block head %}
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-{%endblock%}
-
-{% block title %} Login {%endblock%}
-
-{% block body %}
+<link rel="stylesheet" type="text/css" href="{% static 'login_styles.css' %}" />
+{%endblock%} {% block title %} Login {%endblock%}
+{% block body %} 
+{% if message is not none %}
+<div class="alert alert-danger alert-top" role="alert">{{ message }}</div>
+{% endif %}
 <div class="reg-container">
-    {% if messages %}
-    <div class="alert alert-danger" role="alert">
-            {% for message in messages %}
-            <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
-            {% endfor %}
+  <div class="reg-userform">
+    <div class="image-container">
+      <img src="{% static 'building.png' %}" alt="Login Image" />
     </div>
-    {% endif %}
-
-    <div class="reg-userform glass">
-        <div class="header-container">
-            <h1 class="header-title">GuideMate</h1>
+    <div class="form-container">
+      <h1 class="header-title">
+        <div class="title-left">
             <a class="nav-link" href="https://www.nitk.ac.in/">
-                <img src="{% static 'nitkLogo.svg' %}" class="nitk-logo" alt="NITK Logo">
+              <img src="{% static 'nitkLogo.svg' %}" class="nitk-logo" alt="NITK Logo" />
             </a>
-        </div>
-
-        <h5 class="subtitle">Login Here</h5>
-
-        <form action="{% url 'login' %}" method="post" class="reg-userform-form">
-            {% csrf_token %}
-
-            <div class="form-group">
-                <label for="exampleInputEmail1">NITK EDU Mail ID</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                    placeholder="NITK mail ID" name="edu_email" required>
-                <div class="g-recaptcha" data-sitekey="6LcGOVsqAAAAAFsMBz_UDf4KgOafYm7WZgF_Vu4l"></div>
+            <div class="title-text">
+                <span class="main-title">Project Guide Allocator</span>
+                <span class="sub-title">National Institute of Technology Karnataka, Surathkal</span>
             </div>
+        </div>
+      </h1>
+       
 
-            <input type="hidden" name="next" value="{{ request.GET.next }}">
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
+      <form action="{% url 'login' %}" method="post" class="reg-userform-form">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="exampleInputEmail1">NITK EDU Mail-ID</label>
+          <input
+            type="text"
+            class="form-control"
+            id="exampleInputEmail1"
+            placeholder="NITK mail ID"
+            name="edu_email"
+            required
+          />
+          
+          <div
+            class="g-recaptcha"
+            data-sitekey="6LcGOVsqAAAAAFsMBz_UDf4KgOafYm7WZgF_Vu4l"
+          ></div>
+        </div>
+        <input type="hidden" name="next" value="{{ request.GET.next }}" />
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
     </div>
+  </div>
 </div>
-
-<style>
-/* Ensures full height and centers the form */
-body, html {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Poppins', sans-serif;
-    background-color: #f4f4f4;
-}
-
-/* Container */
-.reg-container {
-    width: 90%;
-    max-width: 420px;
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-/* Header styling */
-.header-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 10px;
-    background-color: #253b50; /* Dark Blue/Purple */
-    padding: 15px;
-    border-radius: 8px 8px 8px 8px;
-}
-
-.header-title {
-    font-size: 1.8rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-    color: white;
-    margin: 0;
-}
-
-.nitk-logo {
-    width: 3rem;
-    height: 3rem;
-}
-
-/* Subtitles */
-.subtitle {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-}
-
-/* Form adjustments */
-.form-group {
-    text-align: left;
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-
-/* Input fields */
-.form-control {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-}
-
-/* Adjust spacing and centering for captcha */
-.g-recaptcha {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
-}
-
-/* Submit button */
-.btn-primary {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 6px;
-    background: #007bff;
-    color: white;
-    border: none;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.3s ease;
-}
-
-.btn-primary:hover {
-    background: #0056b3;
-}
-
-/* Mobile-friendly adjustments */
-@media (max-width: 480px) {
-    .reg-container {
-        width: 95%;
-        padding: 1.5rem;
-    }
-
-    .nitk-logo {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
-}
-</style>
 {% endblock %}

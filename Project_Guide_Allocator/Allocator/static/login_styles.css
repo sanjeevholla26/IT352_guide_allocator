@@ -1,0 +1,183 @@
+/* Consolidated CSS for Login Pages */
+@media (max-width: 768px) { /* Adjust breakpoint as needed */
+  .image-container {
+      display: none; /* Hides the image */
+  }
+
+  .reg-userform {
+    width: 100% !important; /* Expand the container */
+    max-width: 500px; /* Prevent it from being too wide */
+    padding: 2rem; /* Add spacing */
+  }
+  .form-container {
+      width: 100% !important; /* Makes form take full width */
+      padding: 1rem !important; /* Adjust padding for better spacing */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+  }
+}
+
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --background-color: #ecf0f1;
+  --text-color: #333;
+}
+
+body {
+  background: var(--background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: "Arial", sans-serif;
+}
+
+h1,
+h5 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.nitk-logo {
+  width: 50px;
+  height: 50px;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  width: 100%;
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--primary-color);
+}
+
+.reg-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh; /* Takes most of the screen */
+  width: 100%;
+}
+
+.reg-userform {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 70%; /* Increase width */
+  max-width: 900px; /* Limit for large screens */
+  height: 70vh; /* Increase height */
+  background: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.reg-userform-form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    flex-direction: column;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .g-recaptcha {
+    margin-top: 1rem; /* Adds space above the CAPTCHA */
+}
+
+
+.image-container {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  padding-left: 1rem; /* Add padding on the left */
+  padding-bottom: 1rem;
+}
+
+.image-container img {
+  width: calc(100% - 1rem); /* Adjust width to account for padding */
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px 0 0 8px;
+}
+
+.form-container {
+  width: 50%;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.alert-top {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  z-index: 1000;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    background-color: #253b50;
+    color:white;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.title-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nitk-logo {
+    width: 40px;
+    height: auto;
+}
+
+.title-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.sub-title {
+    font-size: 0.9rem;
+    font-weight: normal;
+    opacity: 0.8;
+}

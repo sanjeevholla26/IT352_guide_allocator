@@ -1,106 +1,56 @@
 {% extends './login_layout.html' %}
 {% load static %}
+
 {% block head %}
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-{%endblock%}
-{% block title %} Login {%endblock%}
+<link rel="stylesheet" type="text/css" href="{% static 'login_styles.css' %}" />
+{% endblock %}
+
+{% block title %} Login {% endblock %}
 
 {% block body %}
+{% if message is not none %}
+<div class="alert alert-danger alert-top" role="alert">
+    {{ message }}
+</div>
+{% endif %}
+
 <div class="reg-container">
-    {% if message is not none %}
-    <div class="alert alert-danger" role="alert">
-        {{message}}
-    </div>
-    {% endif %}
+    <div class="reg-userform">
+        <div class="image-container">
+            <img src="{% static 'building.png' %}" alt="Login Image" />
+        </div>
+        <div class="form-container">
+            <h1 class="header-title">
+                <div class="title-left">
+                    <a class="nav-link" href="https://www.nitk.ac.in/">
+                      <img src="{% static 'nitkLogo.svg' %}" class="nitk-logo" alt="NITK Logo" />
+                    </a>
+                    <div class="title-text">
+                        <span class="main-title">Project Guide Allocator</span>
+                        <span class="sub-title">National Institute of Technology Karnataka, Surathkal</span>
+                    </div>
+                </div>
+              </h1>
+            <h5>Enter the OTP</h5>
 
-    <div class="reg-userform glass">
-        <h1 class="header-title">
-            <div class="actual-title">Project Guide Allocator</div>
-            <a class="nav-link" href="https://www.nitk.ac.in/">
-                <img src="{% static 'nitkLogo.svg' %}" class="nitk-logo" alt="NITK Logo">
-            </a>
-        </h1>
-        <h5>Enter the OTP</h5>
-        {% if reset_pswd %}
-        <form action="{% url 'forgot_password_otp' %}" method="post" class="reg-userform-form">
-        {% else %}
-        <form action="{% url 'otp' %}" method="post" class="reg-userform-form">
-        {% endif %}
-            {% csrf_token %}
-
-            <div class="form-group">
-                <label for="otp_entry">OTP:</label>
-                <input type="text" class="form-control" id="otp_entry" aria-describedby="otp_entry"
-                    placeholder="Enter your OTP" name="otp_entry" required>
-            </div>
-
-            <input type="hidden" name="next" value="{{ next }}">
-            <input type="hidden" name="edu_email" value="{{ edu_email }}">
-            <button type="submit" class="btn btn-primary">Submit OTP</button>
-
-        </form>
-
+            {% if reset_pswd %}
+            <form action="{% url 'forgot_password_otp' %}" method="post" class="reg-userform-form">
+            {% else %}
+            <form action="{% url 'otp' %}" method="post" class="reg-userform-form">
+            {% endif %}
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="otp_entry">OTP:</label>
+                    <input type="text" class="form-control" id="otp_entry" placeholder="Enter your OTP" name="otp_entry" required />
+                </div>
+                <input type="hidden" name="next" value="{{ next }}" />
+                <input type="hidden" name="edu_email" value="{{ edu_email }}" />
+                <button type="submit" class="btn btn-primary">Submit OTP</button>
+            </form> 
+        </div>
     </div>
 </div>
-
-<style>
-    .reg-userform {
-        /* background: white; */
-        padding: 3%;
-        max-width: 1100px;
-        margin: auto;
-        border-radius: 1;
-        filter: none;
-    }
-
-    .reg-userform>h1 {
-        font-weight: bolder;
-        letter-spacing: 1.5px;
-        border-bottom: solid;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .reg-userform h1.header-title {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bolder;
-        letter-spacing: 1.5px;
-        border-bottom: solid;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .reg-userform h1.header-title .nav-link {
-        margin-left: 1rem;
-    }
-
-    .actual-title {
-        margin-right: 8.5rem;
-    }
-
-    .nitk-logo {
-        width: 5rem;
-        height: 5rem;
-    }
-
-    .reg-userform>h5 {
-        font-weight: bolder;
-        margin-left: 2%;
-    }
-
-    .reg-userform-form {
-        max-width: 600px;
-        margin-left: 2%;
-        margin-top: 2rem;
-    }
-
-    p {
-        margin-left: 3%;
-        margin-top: 1rem;
-    }
-</style>
 {% endblock %}
