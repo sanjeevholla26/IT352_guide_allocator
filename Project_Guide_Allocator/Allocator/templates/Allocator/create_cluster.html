@@ -68,15 +68,15 @@
                 <div class="d-flex flex-wrap gap-2">
                     <form action="{% url 'generate_student_pdf' id=event.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-success">Send Reports to Students</button>
+                        <button type="submit" class="btn btn-primary">Send Reports to Students</button>
                     </form>
                     <form action="{% url 'generate_faculty_pdf' id=event.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-success">Send Reports to Faculty</button>
+                        <button type="submit" class="btn btn-primary">Send Reports to Faculty</button>
                     </form>
                     <form action="{% url 'generate_admin_pdf' id=event.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-success">Send Reports to Admin</button>
+                        <button type="submit" class="btn btn-primary">Send Reports to Admin</button>
                     </form>
                     <form action="{% url 'reset_allocation' id=event.id %}" method="post">
                         {% csrf_token %}

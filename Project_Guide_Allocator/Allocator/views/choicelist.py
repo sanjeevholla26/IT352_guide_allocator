@@ -115,8 +115,8 @@ def create_or_edit_choicelist(request, id):
                 curr_student = Student.objects.get(user=request.user)
                 choice = ChoiceList.objects.get(event=e, student=curr_student)
                 send_to_otp(request.user)
-                messages.error(request, f"OTP has been mailed.")
-                return render(request, "choice_lock_otp.html", {'id': choice.id})
+                # messages.error(request, "OTP has been mailed.")
+                return render(request, "choice_lock_otp.html", {'id': choice.id, 'message': "OTP has been mailed."})
         else:
             preference_range = range(1, e.eligible_faculties.count() + 1)
             curr_student = Student.objects.get(user=request.user)

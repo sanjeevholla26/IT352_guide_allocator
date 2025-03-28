@@ -20,6 +20,8 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Event Name</th>
+                        <th scope="col">Project Type</th>
+                        <th scope="col">Batch-Branch</th>
                         <th scope="col">Cluster ID</th>
                         <th scope="col">Faculty</th>
                         <th scope="col">Resolve Clash</th>
@@ -30,6 +32,8 @@
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td class="fw-bold text-uppercase">{{ clash.event.event_name }}</td>
+                        <td class="fw-bold text">{{ clash.event.project_type }}</td>
+                        <td class="fw-bold text">{{ clash.event.eligible_batch }} - {{ clash.event.eligible_branch }}</td>
                         <td class="fw-bold text-uppercase">{{ clash.cluster_id }}</td>
                         <td class="fw-bold text-uppercase">{{ clash.faculty.abbreviation }}</td>
                         <td>

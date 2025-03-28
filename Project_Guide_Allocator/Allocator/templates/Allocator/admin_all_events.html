@@ -22,6 +22,7 @@
                     <th scope="col">Start Date</th>
                     <th scope="col">End Date</th>
                     <th scope="col">Course Type</th>
+                    <th scope="col">Batch-Branch</th>
                     <th scope="col">View</th>
                     <th scope="col">Edit Event</th>
                     <th scope="col">Add Backlog</th>
@@ -35,6 +36,7 @@
                         <td>{{ event.start_datetime }}</td>
                         <td>{{ event.end_datetime }}</td>
                         <td>{{ event.project_type }}</td>
+                        <td>{{ event.eligible_batch }} - {{ event.eligible_branch }}</td>
                         <td>
                             <a href="{% url 'create_cluster' id=event.id %}" class="btn btn-success btn-sm">
                                 <i class="bi bi-eye"></i> View

@@ -23,7 +23,7 @@
           <th scope="col">Course</th>
           <th scope="col">Branch</th>
           <th scope="col">CGPA</th>
-          <th scope="col">Academic Year</th>
+          <th scope="col">Batch</th>
           <th scope="col">Internship</th>
           <th scope="col">Actions</th>
         </tr>
@@ -33,7 +33,7 @@
           <tr>
             <td>{{ student.user.username }}</td>
             <td>{{ student.user.first_name }} {{ student.user.last_name }}</td>
-            <td>{{ student.user.email }}</td>
+            <td>{{ student.user.edu_email }}</td>
             <td>{{ student.course_type }}</td>
             <td>{{ student.branch }}</td>
             <td>{{ student.cgpa }}</td>

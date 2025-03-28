@@ -69,7 +69,7 @@
                 </table>
                 
                 {% if event.status == 'open' and not locked and filled_preference|length > 0 %}
-                <button type="button" class="btn btn-success mt-3" onclick="submitForm('lock')">
+                <button type="button" class="btn btn-success mt-3 mb-5" onclick="submitForm('lock')">
                     <i class="bi bi-lock"></i> Lock Choices
                 </button>
                 {% endif %}
