@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
+from Project_Guide_Allocator.settings import RESET_DELAY
+from datetime import timedelta
 
 from django.contrib.auth.models import BaseUserManager
 
@@ -34,6 +37,9 @@ class CustomUserManager(BaseUserManager):
 
 
 class MyUser(AbstractUser):
+    def default_pswd_blocked():
+        return timezone.now() + timedelta(hours=RESET_DELAY)
+
     # email = models.EmailField(unique=True)  # Override the default email field to make it unique
     edu_email = models.EmailField(unique=True)
     mobile_number = models.CharField(max_length=15, null=False)
@@ -41,7 +47,9 @@ class MyUser(AbstractUser):
     is_registered = models.BooleanField(default=False)
     failed_attempts = models.IntegerField(default=0)
     failed_blocked = models.DateTimeField(default=None, blank=True, null=True)
-
+    # pswd_blocked = models.DateTimeField(default=None, blank=True, null=True)
+    pswd_blocked = models.DateTimeField(default=default_pswd_blocked, blank=True, null=True)
+    
     def __str__(self):
         return self.edu_email
 

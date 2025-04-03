@@ -19,7 +19,8 @@
 <body class="background-gradient">
     {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-top" role="alert">
+        <!-- <div class="alert alert-{{ message.tags }} alert-top" role="alert"> -->
+        <div class="alert alert-danger alert-top" role="alert">
             {{ message }}
         </div>
     {% endfor %}

@@ -6,7 +6,15 @@ from ..email_sender import send_mail_page
 from .authorization import generate_otp, password_creation
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib import messages
-from Project_Guide_Allocator.settings import SWIFT_OTP
+from Project_Guide_Allocator.settings import SWIFT_OTP, RESET_DELAY
+from django.utils import timezone
+from datetime import timedelta
+import pytz
+
+def blocked_time(user):
+    ist = pytz.timezone('Asia/Kolkata')
+    blocked_time_ist = user.pswd_blocked.astimezone(ist)
+    return blocked_time_ist.strftime('%d %B %Y, %I:%M %p')
 
 def home(request) :
     if not request.user.is_authenticated :
@@ -36,6 +44,9 @@ def change_password(request):
             "change_password": True
         })
     else:
+        if request.user.pswd_blocked and request.user.pswd_blocked > timezone.now():
+            messages.error(request, f"User is blocked. Wait till {request.user.pswd_blocked} to reset password.")
+            return HttpResponseRedirect(reverse("home"))
         user = request.user
         user.otp = generate_otp()
         user.save()
@@ -47,8 +58,11 @@ def change_password(request):
         return render(request, "Allocator/home_change_password.html")
 
 def update_password(request):
-    if not request.user.is_authenticated :
+    if not request.user or not request.user.is_authenticated :
         return HttpResponseRedirect(reverse("login"))
+    if request.user.pswd_blocked and request.user.pswd_blocked > timezone.now():
+        messages.error(request, f"User is blocked. Wait till {blocked_time(request.user)} to reset password.")
+        return HttpResponseRedirect(reverse("home"))
     if request.method == "POST":
         return password_creation(request)
     else:

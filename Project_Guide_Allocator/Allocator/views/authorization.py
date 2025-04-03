@@ -10,7 +10,7 @@ from django.contrib.auth.hashers import check_password
 from django.urls import reverse
 from django.urls import reverse
 from captcha.models import CaptchaStore
-from Project_Guide_Allocator.settings import ADMIN_BYPASS, QUICK_LOGIN, SWIFT_OTP, FAILS_COUNT, FAILS_DELAY, CAPTCHA_SECRET_KEY
+from Project_Guide_Allocator.settings import ADMIN_BYPASS, QUICK_LOGIN, SWIFT_OTP, FAILS_COUNT, FAILS_DELAY, RESET_DELAY, CAPTCHA_SECRET_KEY
 from django.utils import timezone
 from datetime import timedelta
 import requests
@@ -18,8 +18,14 @@ import random
 import logging
 from twilio.rest import Client
 from django.conf import settings
+import pytz
 
 logger = logging.getLogger('django')
+
+def blocked_time(user):
+    ist = pytz.timezone('Asia/Kolkata')
+    blocked_time_ist = user.pswd_blocked.astimezone(ist)
+    return blocked_time_ist.strftime('%d %B %Y, %I:%M %p')
 
 def generate_otp():
     if SWIFT_OTP:
@@ -218,6 +224,7 @@ def password_creation(request):
         user.otp=None
         user.set_password(password)
         user.is_registered = True
+        user.pswd_blocked = timezone.now() + timedelta(hours=RESET_DELAY)
         user.save()
         authenticate(request, edu_email=edu_email, password=password)
         login(request, user)
@@ -278,6 +285,9 @@ def forgot_password(request) :
                 if is_user_blocked(user):
                     messages.error(request, f"User is blocked. Wait till {user.failed_blocked} to login.")
                     return HttpResponseRedirect(reverse(login_view))
+                if user.pswd_blocked and user.pswd_blocked > timezone.now():
+                    messages.error(request, f"User is blocked. Wait till {blocked_time(user)} to reset password.")
+                    return HttpResponseRedirect(reverse(login_view))
                 user.otp = None
                 user.save()
                 user.otp = generate_otp()
@@ -307,8 +317,12 @@ def forgot_password_otp(request) :
                 if is_user_blocked(user):
                     messages.error(request, f"User is blocked. Wait till {user.failed_blocked} to login.")
                     return HttpResponseRedirect(reverse(login_view))
+                if user.pswd_blocked and user.pswd_blocked > timezone.now():
+                    messages.error(request, f"User is blocked. Wait till {blocked_time(user)} to reset password.")
+                    return HttpResponseRedirect(reverse(login_view))
                 user.otp = None
                 user.is_registered=False
+                user.pswd_blocked = timezone.now() + timedelta(hours=RESET_DELAY)
                 user.save()
                 recv_name = "User"
                 if user.first_name:
